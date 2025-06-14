@@ -14,9 +14,12 @@ RUN docker-php-ext-install pdo pdo_mysql
 # Enable Apache rewrite module
 RUN a2enmod rewrite
 
-# Change Apache to listen on port 8080 (for Railway)
-RUN sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf && \
-    sed -i 's/:80>/:8080>/' /etc/apache2/sites-available/000-default.conf
+
+    # Change Apache to listen on port 90
+RUN sed -i 's/Listen 80/Listen 90/' /etc/apache2/ports.conf && \
+    sed -i 's/:80>/:90>/' /etc/apache2/sites-available/000-default.conf
+
+
 
 # Copy Laravel app from builder stage
 COPY --from=build /app /var/www/html
@@ -29,4 +32,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Apache config (make sure this file exists)
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
-EXPOSE 8080
+EXPOSE 90
