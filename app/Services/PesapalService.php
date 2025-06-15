@@ -26,38 +26,40 @@ class PesapalService
     /**
      * Get access token from Pesapal
      */
-    public function getAccessToken()
-    {
-        // Check if token exists in cache
+   public function getAccessToken($forceRefresh = false)
+{
+    // Force refresh or try cache first
+    if (!$forceRefresh) {
         $cachedToken = Cache::get('pesapal_access_token');
         if ($cachedToken) {
             return $cachedToken;
         }
-
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ])->post("{$this->baseUrl}/api/Auth/RequestToken", [
-            'consumer_key' => $this->consumerKey,
-            'consumer_secret' => $this->consumerSecret,
-        ]);
-
-        if (!$response->successful()) {
-            throw new \Exception('Failed to get access token: ' . $response->body());
-        }
-
-        $data = $response->json();
-        $token = $data['token'];
-        $expiresIn = $data['expiryDate'] ?? 3600;
-
-        // Cache token for slightly less time than expiry
-       if (!is_numeric($expiresIn)) {
-    $expiresIn = 3600; // fallback value
-}
-Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
-
-        return $token;
     }
+
+    $response = Http::withHeaders([
+        'Accept' => 'application/json',
+        'Content-Type' => 'application/json',
+    ])->post("{$this->baseUrl}/api/Auth/RequestToken", [
+        'consumer_key' => $this->consumerKey,
+        'consumer_secret' => $this->consumerSecret,
+    ]);
+
+    if (!$response->successful()) {
+        throw new \Exception('Failed to get access token: ' . $response->body());
+    }
+
+    $data = $response->json();
+    $token = $data['token'];
+    $expiresIn = $data['expiryDate'] ?? 3600;
+
+    if (!is_numeric($expiresIn)) {
+        $expiresIn = 3600;
+    }
+
+    Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
+    return $token;
+}
+
 
     /**
      * Get list of registered IPNs (to verify your manual registration)
@@ -93,18 +95,19 @@ Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
     /**
      * Submit order for payment
      */
-    public function submitOrderRequest($orderData)
-    {
+   public function submitOrderRequest($orderData)
+{
+    try {
         $token = $this->getAccessToken();
         $ipnId = $this->getIPNId();
 
         $payload = [
             'id' => $orderData['id'],
             'currency' => $orderData['currency'] ?? 'TZS',
-            'amount' =>$orderData['amount'],
+            'amount' => $orderData['amount'],
             'description' => $orderData['description'],
             'callback_url' => $orderData['callback_url'],
-            'notification_id' => $ipnId, // Use the manually registered IPN ID
+            'notification_id' => $ipnId,
             'billing_address' => $orderData['billing_address'] ?? []
         ];
 
@@ -116,13 +119,25 @@ Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
             'Authorization' => 'Bearer ' . $token,
         ])->post("{$this->baseUrl}/api/Transactions/SubmitOrderRequest", $payload);
 
+        // Retry once if token is invalid
+        if ($response->status() === 401) {
+            Cache::forget('pesapal_access_token');
+            $token = $this->getAccessToken(true);
+
+            $response = Http::withHeaders([
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json',
+                'Authorization' => 'Bearer ' . $token,
+            ])->post("{$this->baseUrl}/api/Transactions/SubmitOrderRequest", $payload);
+        }
+
         if (!$response->successful()) {
             Log::error('PesaPal Order Submission Failed', [
                 'status' => $response->status(),
                 'body' => $response->body(),
                 'payload' => $payload
             ]);
-            
+
             throw new \Exception('Failed to submit order: ' . $response->body());
         }
 
@@ -130,7 +145,12 @@ Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
         Log::info('PesaPal Order Response', $result);
 
         return $result;
+
+    } catch (\Exception $e) {
+        Log::error('submitOrderRequest exception: ' . $e->getMessage());
+        throw $e;
     }
+}
 
     /**
      * Get transaction status from PesaPal
