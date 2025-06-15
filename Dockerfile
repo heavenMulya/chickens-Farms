@@ -7,45 +7,27 @@ RUN composer install --no-dev --optimize-autoloader
 # 2. Serve stage: PHP + Apache
 FROM php:8.2.12-apache
 
-# Install extensions
+# Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Enable Apache modules
-RUN a2enmod rewrite headers
+# Enable Apache rewrite module
+RUN a2enmod rewrite
 
-# Install gettext-base for envsubst and set ServerName
-RUN apt-get update \
-    && apt-get install -y gettext-base \
-    && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
-    && rm -rf /var/lib/apt/lists/*
+# Change Apache to listen on port 90 (to match your XAMPP setup)
+RUN sed -i 's/Listen 80/Listen 90/' /etc/apache2/ports.conf && \
+    sed -i 's/:80>/:90>/' /etc/apache2/sites-available/000-default.conf
 
-# Copy virtual host template
-COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf.template
-
-# Copy Laravel app and set permissions
+# Copy Laravel app from builder stage
 COPY --from=build /app /var/www/html
 WORKDIR /var/www/html
-RUN chown -R www-data:www-data storage bootstrap/cache
 
-# Create startup script
-RUN echo '#!/bin/bash\n\
-set -e\n\
-# Railway provides PORT, fallback to 90 for local dev\n\
-export PORT=${PORT:-90}\n\
-echo "Starting Apache on port $PORT"\n\
-# Generate Apache config with environment variables\n\
-envsubst '"'"'$PORT'"'"' < /etc/apache2/sites-available/000-default.conf.template > /etc/apache2/sites-available/000-default.conf\n\
-# Show the generated config for debugging\n\
-echo "Generated Apache config:"\n\
-cat /etc/apache2/sites-available/000-default.conf\n\
-# Test Apache config\n\
-apache2ctl configtest\n\
-# Start Apache\n\
-exec apache2-foreground' > /usr/local/bin/start-apache.sh \
-    && chmod +x /usr/local/bin/start-apache.sh
+# Set proper permissions for Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Use port 90 for local development
+# Apache config (this will override the default)
+COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
 EXPOSE 90
 
-# Use the startup script
-CMD ["/usr/local/bin/start-apache.sh"]
+# Start Apache
+CMD ["apache2-foreground"]
