@@ -496,7 +496,8 @@
 
     payload.amount = total.toFixed(2);
     payload.currency = 'TZS';
-//console.log(payload)
+console.log(formData)
+console.log(payload)
     $.ajax({
         url: 'https://chickens-farms-production-6aa9.up.railway.app/api/payment/initiate',
         method: 'POST',
