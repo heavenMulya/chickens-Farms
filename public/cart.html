@@ -486,7 +486,7 @@
     payload.currency = 'TZS';
 
     $.ajax({
-        url: 'http://127.0.0.1:8000/api/payment/initiate',
+        url: 'https://chickens-farms-production-6aa9.up.railway.app/api/payment/initiate',
         method: 'POST',
         data: JSON.stringify(payload),
         contentType: 'application/json',
