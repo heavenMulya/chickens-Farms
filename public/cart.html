@@ -332,11 +332,10 @@
                     <span>Total:</span>
                     <span id="total">0.00 TZS</span>
                 </div>
-                <button class="btn-primary-custom" onclick="checkout()">Proceed to Checkout</button>
                 <a href="index.html#products" class="btn-primary-custom mt-3 d-block text-center">Continue Shopping</a>
             </div>
 
-            <form id="checkout-form" class="mt-5">
+            <form class="mt-5">
     <div class="row">
         <div class="col-md-4">
             <input type="text" class="form-control mb-2" name="first_name" placeholder="First Name" required>
@@ -354,7 +353,13 @@
             <input type="text" class="form-control mb-2" name="description" placeholder="Description" value="Order from MeatFresh">
         </div>
     </div>
-    <button type="submit" class="btn-primary-custom mt-3 w-100" id="checkout-form">Proceed with Payment</button>
+
+<button type="submit" class="btn-primary-custom mt-3 w-100" id="checkout-form">
+    <span class="btn-text">Proceed with Payment</span>
+    <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true" id="btn-loader"></span>
+</button>
+
+
 </form>
         </div>
 
@@ -470,6 +475,9 @@
         return;
     }
 
+      $('#checkout-form').attr('disabled', true);
+    $('#btn-loader').removeClass('d-none');
+    $('.btn-text').text('Processing...');
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
    // const deliveryFee = 5;
    // const tax = subtotal * 0.05;
@@ -491,6 +499,11 @@
         data: JSON.stringify(payload),
         contentType: 'application/json',
         success: function(response) {
+
+             $('#checkout-submit-btn').attr('disabled', false);
+            $('#btn-loader').addClass('d-none');
+            $('.btn-text').text('Proceed with Payment');
+
             if (response.success && response.redirect_url) {
                 window.location.href = response.redirect_url;
             } else {
@@ -498,7 +511,12 @@
             }
         },
         error: function(err) {
-            console.error(err);
+
+         //$('#checkout-submit-btn').attr('disabled', false);
+          //$('#btn-loader').addClass('d-none');
+           //$('.btn-text').text('Proceed with Payment');
+            
+            console.log(err);
             
         }
     });
