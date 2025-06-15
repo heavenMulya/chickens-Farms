@@ -51,7 +51,10 @@ class PesapalService
         $expiresIn = $data['expiryDate'] ?? 3600;
 
         // Cache token for slightly less time than expiry
-        Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
+       if (!is_numeric($expiresIn)) {
+    $expiresIn = 3600; // fallback value
+}
+Cache::put('pesapal_access_token', $token, now()->addSeconds($expiresIn - 60));
 
         return $token;
     }
@@ -97,8 +100,8 @@ class PesapalService
 
         $payload = [
             'id' => $orderData['id'],
-            'currency' => $orderData['currency'] ?? 'KES',
-            'amount' => $orderData['amount'],
+            'currency' => $orderData['currency'] ?? 'TZS',
+            'amount' =>$orderData['amount'],
             'description' => $orderData['description'],
             'callback_url' => $orderData['callback_url'],
             'notification_id' => $ipnId, // Use the manually registered IPN ID

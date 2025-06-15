@@ -79,7 +79,7 @@
 
         /* Hero Section */
         .hero-section {
-            background-image: url('C:/Users/Heaven/Desktop/whole_broiler-scaled.jpeg');
+            background-image: url('img/whole_broiler-scaled.jpeg');
             color: white;
             padding: 100px 0;
             position: relative;
@@ -487,7 +487,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="product-card" data-product-id="1">
                         <div style="position: relative;">
-                            <img src="C:/Users/Heaven/Desktop/whole_chicken.png" alt="Fresh Whole Chicken" class="product-image">
+                            <img src="img/whole_chicken.png" alt="Fresh Whole Chicken" class="product-image">
                             <div class="quality-badge fresh-badge">FRESH</div>
                         </div>
                         <div class="product-info">
@@ -504,7 +504,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="product-card" data-product-id="2">
                         <div style="position: relative;">
-                            <img src="C:/Users/Heaven/Desktop/fresh-half-raw-chicken-with-spices-seasonings-wooden-board_147620-2902.avif" alt="Fresh Half Chicken" class="product-image">
+                            <img src="img/fresh-half-raw-chicken-with-spices-seasonings-wooden-board_147620-2902.avif" alt="Fresh Half Chicken" class="product-image">
                             <div class="quality-badge fresh-badge">FRESH</div>
                         </div>
                         <div class="product-info">
@@ -521,7 +521,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="product-card" data-product-id="3">
                         <div style="position: relative;">
-                            <img src="C:/Users/Heaven/Desktop/pile-of-chicken-eggs_600x.avif" alt="Fresh Eggs" class="product-image">
+                            <img src="img/pile-of-chicken-eggs_600x.avif" alt="Fresh Eggs" class="product-image">
                             <div class="quality-badge fresh-badge">FRESH</div>
                         </div>
                         <div class="product-info">
@@ -538,7 +538,7 @@
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="product-card" data-product-id="4">
                         <div style="position: relative;">
-                            <img src="C:/Users/Heaven/Desktop/marketpoultry-parts-legquarter_0.jpg" alt="Fresh Quarter Chicken" class="product-image">
+                            <img src="img/marketpoultry-parts-legquarter_0.jpg" alt="Fresh Quarter Chicken" class="product-image">
                             <div class="quality-badge fresh-badge">FRESH</div>
                         </div>
                         <div class="product-info">
@@ -619,7 +619,15 @@
     <!-- Custom JavaScript -->
     <script>
         // Initialize cart from localStorage
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        //let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let cart;
+try {
+    const cartData = localStorage.getItem('cart');
+    cart = Array.isArray(JSON.parse(cartData)) ? JSON.parse(cartData) : [];
+} catch (e) {
+    cart = [];
+}
+
 
         // Update cart badge
         function updateCartBadge() {

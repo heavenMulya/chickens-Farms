@@ -70,6 +70,11 @@ public function setupPesapal()
     ]);
 
     try {
+
+       \Log::info('API Received Amount:', [
+        'value' => $request->input('amount'),
+        'type' => gettype($request->input('amount'))
+    ]);
         // Generate unique order tracking ID
         $orderTrackingId = 'ORDER_' . time() . '_' . Str::random(10);
 
@@ -88,7 +93,7 @@ public function setupPesapal()
 
         // Prepare order data for Pesapal
         $orderData = [
-            'id' => $orderTrackingId,
+           'id' => $orderTrackingId,
             'currency' => $request->currency,
             'amount' => $request->amount,
             'description' => $request->description,
