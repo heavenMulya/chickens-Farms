@@ -6,7 +6,7 @@ COPY . .
 
 RUN composer install --no-dev --optimize-autoloader
 
-FROM php:8.1.6-apache
+FROM php:8.2.12-apache
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql
