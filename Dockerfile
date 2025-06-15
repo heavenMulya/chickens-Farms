@@ -1,42 +1,32 @@
-# Use official PHP image with required extensions
-FROM php:8.2-fpm
+FROM composer:latest AS build
 
-# Set working directory
-WORKDIR /var/www
+WORKDIR /app
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
-    curl \
-    libonig-dev \
-    libxml2-dev \
-    libzip-dev \
-    && docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
-
-# Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Copy project files
 COPY . .
 
-# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Permissions
-RUN chown -R www-data:www-data /var/www \
-    && chmod -R 755 /var/www/storage
+FROM php:8.1.6-apache
 
-# Expose port
-EXPOSE 9000
+# Install PHP extensions
+RUN docker-php-ext-install pdo pdo_mysql
 
-# Start Laravel with PHP-FPM
-CMD ["php-fpm"]
+# Enable Apache rewrite module
+RUN a2enmod rewrite
+
+# Change Apache to listen on port 8080 (for Railway)
+RUN sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf && \
+    sed -i 's/:80>/:8080>/' /etc/apache2/sites-available/000-default.conf
+
+# Copy Laravel app from builder stage
+COPY --from=build /app /var/www/html
+
+WORKDIR /var/www/html
+
+# Set proper permissions for Laravel
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Apache config (make sure this file exists)
+COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
+
+EXPOSE 8080
