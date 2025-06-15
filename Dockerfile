@@ -29,4 +29,6 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 # Apache config (make sure this file exists)
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 EXPOSE 8080
