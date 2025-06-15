@@ -335,7 +335,7 @@
                 <a href="index.html#products" class="btn-primary-custom mt-3 d-block text-center">Continue Shopping</a>
             </div>
 
-            <form class="mt-5">
+            <div class="mt-5">
     <div class="row">
         <div class="col-md-4">
             <input type="text" class="form-control mb-2" name="first_name" placeholder="First Name" required>
@@ -354,13 +354,13 @@
         </div>
     </div>
 
-<button type="submit" class="btn-primary-custom mt-3 w-100" id="checkout-form">
+<button type="submit" class="btn-primary-custom mt-3 w-100" id="checkout-submit-btn">
     <span class="btn-text">Proceed with Payment</span>
     <span class="spinner-border spinner-border-sm ms-2 d-none" role="status" aria-hidden="true" id="btn-loader"></span>
 </button>
 
 
-</form>
+</div>
         </div>
 
     </section>
@@ -466,46 +466,39 @@
             }
 
 
-            $('#checkout-form').on('click', function(e) {
-    e.preventDefault();
-    //console.log('working');
-
+ $('#checkout-submit-btn').on('click', function () {
     if (cart.length === 0) {
         alert('Your cart is empty!');
         return;
     }
 
-      $('#checkout-form').attr('disabled', true);
+    $(this).attr('disabled', true);
     $('#btn-loader').removeClass('d-none');
     $('.btn-text').text('Processing...');
+
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-   // const deliveryFee = 5;
-   // const tax = subtotal * 0.05;
     const total = subtotal;
 
-    const formData = $(this).serializeArray();
-    const payload = {};
+    // Manually collect input values
+    const payload = {
+        first_name: $('input[name="first_name"]').val(),
+        last_name: $('input[name="last_name"]').val(),
+        email: $('input[name="email"]').val(),
+        phone_number: $('input[name="phone_number"]').val(),
+        description: $('input[name="description"]').val() || 'Order from MeatFresh',
+        amount: total.toFixed(2),
+        currency: 'TZS'
+    };
 
-    formData.forEach(field => {
-        payload[field.name] = field.value;
-    });
+    console.log('Payload:', payload);
 
-    if (!payload.description) {
-    payload.description = 'Order from MeatFresh';
-}
-
-    payload.amount = total.toFixed(2);
-    payload.currency = 'TZS';
-console.log(formData)
-console.log(payload)
     $.ajax({
         url: 'https://chickens-farms-production-6aa9.up.railway.app/api/payment/initiate',
         method: 'POST',
         data: JSON.stringify(payload),
         contentType: 'application/json',
         success: function(response) {
-
-             $('#checkout-form').attr('disabled', false);
+            $('#checkout-submit-btn').attr('disabled', false);
             $('#btn-loader').addClass('d-none');
             $('.btn-text').text('Proceed with Payment');
 
@@ -516,16 +509,15 @@ console.log(payload)
             }
         },
         error: function(err) {
-
-         //$('#checkout-submit-btn').attr('disabled', false);
-          //$('#btn-loader').addClass('d-none');
-           //$('.btn-text').text('Proceed with Payment');
-            
-            console.log(err);
-            
+            $('#checkout-submit-btn').attr('disabled', false);
+            $('#btn-loader').addClass('d-none');
+            $('.btn-text').text('Proceed with Payment');
+            console.error(err);
         }
     });
 });
+
+
 
         });
     </script>
