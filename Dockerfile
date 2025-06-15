@@ -10,8 +10,8 @@ FROM php:8.2.12-apache
 # Install extensions
 RUN docker-php-ext-install pdo pdo_mysql
 
-# Enable Apache rewrite module
-RUN a2enmod rewrite
+# Enable Apache modules
+RUN a2enmod rewrite headers
 
 # Install gettext-base for envsubst and set ServerName
 RUN apt-get update \
@@ -29,10 +29,17 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 # Create startup script
 RUN echo '#!/bin/bash\n\
-# Set default port if not provided\n\
+set -e\n\
+# Railway provides PORT, fallback to 90 for local dev\n\
 export PORT=${PORT:-90}\n\
+echo "Starting Apache on port $PORT"\n\
 # Generate Apache config with environment variables\n\
 envsubst '"'"'$PORT'"'"' < /etc/apache2/sites-available/000-default.conf.template > /etc/apache2/sites-available/000-default.conf\n\
+# Show the generated config for debugging\n\
+echo "Generated Apache config:"\n\
+cat /etc/apache2/sites-available/000-default.conf\n\
+# Test Apache config\n\
+apache2ctl configtest\n\
 # Start Apache\n\
 exec apache2-foreground' > /usr/local/bin/start-apache.sh \
     && chmod +x /usr/local/bin/start-apache.sh
