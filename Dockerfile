@@ -14,10 +14,12 @@ RUN docker-php-ext-install pdo pdo_mysql
 RUN a2enmod rewrite
 
 # Set dynamic port and suppress hostname warning
-RUN apt-get update \
- && apt-get install -y envsubst \
+
+ RUN apt-get update \
+ && apt-get install -y gettext-base \
  && echo "ServerName localhost" >> /etc/apache2/apache2.conf \
- && sed -i 's/Listen 80/Listen ${PORT}/' /etc/apache2/ports.conf
+ && rm -rf /var/lib/apt/lists/*
+
 
 # Copy virtual host config and replace placeholder with $PORT
 COPY ./docker/apache.conf /etc/apache2/sites-available/000-default.conf.template
