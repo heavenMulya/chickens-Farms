@@ -490,9 +490,13 @@
         payload[field.name] = field.value;
     });
 
+    if (!payload.description) {
+    payload.description = 'Order from MeatFresh';
+}
+
     payload.amount = total.toFixed(2);
     payload.currency = 'TZS';
-console.log(payload)
+//console.log(payload)
     $.ajax({
         url: 'https://chickens-farms-production-6aa9.up.railway.app/api/payment/initiate',
         method: 'POST',
@@ -500,7 +504,7 @@ console.log(payload)
         contentType: 'application/json',
         success: function(response) {
 
-             $('#checkout-submit-btn').attr('disabled', false);
+             $('#checkout-form').attr('disabled', false);
             $('#btn-loader').addClass('d-none');
             $('.btn-text').text('Proceed with Payment');
 
