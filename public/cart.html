@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -263,6 +264,7 @@
         }
     </style>
 </head>
+
 <body>
     <nav class="navbar navbar-expand-lg navbar-light fixed-top">
         <div class="container">
@@ -314,6 +316,8 @@
                     </tbody>
                 </table>
             </div>
+           
+
             <div class="cart-summary">
                 <h3 class="summary-title">Order Summary</h3>
                 <div class="summary-row">
@@ -371,6 +375,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
         function renderCart() {
@@ -490,7 +495,7 @@
         currency: 'TZS'
     };
 
-    console.log('Payload:', payload);
+    //console.log('Payload:', payload);
 
     $.ajax({
         url: 'https://chickens-farms-production-6aa9.up.railway.app/api/payment/initiate',
@@ -503,6 +508,9 @@
             $('.btn-text').text('Proceed with Payment');
 
             if (response.success && response.redirect_url) {
+               // window.location.href = response.redirect_url;
+               //localStorage.clear();
+               // window.open(response.redirect_url, '_blank');
                 window.location.href = response.redirect_url;
             } else {
                 alert(response.message || 'Payment initiation failed.');

@@ -57,9 +57,9 @@ public function setupPesapal()
 
 
 
-   public function initiatePayment(Request $request)
+ public function initiatePayment(Request $request)
 {
-    $request->validate([
+    $validated = $request->validate([
         'amount' => 'required|numeric|min:1',
         'currency' => 'required|string|max:3',
         'description' => 'required|string',
@@ -70,42 +70,34 @@ public function setupPesapal()
     ]);
 
     try {
-
-       \Log::info('API Received Amount:', [
-        'value' => $request->input('amount'),
-        'type' => gettype($request->input('amount'))
-    ]);
-        // Generate unique order tracking ID
         $orderTrackingId = 'ORDER_' . time() . '_' . Str::random(10);
 
-        // Create payment record
         $payment = Payment::create([
             'order_tracking_id' => $orderTrackingId,
-            'amount' => $request->amount,
-            'currency' => $request->currency,
-            'description' => $request->description,
-            'email' => $request->email,
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'phone_number' => $request->phone_number,
+            'amount' => $validated['amount'],
+            'currency' => $validated['currency'],
+            'description' => $validated['description'],
+            'email' => $validated['email'],
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'phone_number' => $validated['phone_number'],
             'status' => 'pending'
         ]);
 
-        // Prepare order data for Pesapal
         $orderData = [
-           'id' => $orderTrackingId,
-            'currency' => $request->currency,
-            'amount' => $request->amount,
-            'description' => $request->description,
+            'id' => $orderTrackingId,
+            'currency' => $validated['currency'],
+            'amount' => $validated['amount'],
+            'description' => $validated['description'],
             'callback_url' => route('payment.callback'),
             'notification_id' => config('pesapal.ipn_id'),
             'billing_address' => [
-                'email_address' => $request->email,
-                'phone_number' => $request->phone_number,
+                'email_address' => $validated['email'],
+                'phone_number' => $validated['phone_number'],
                 'country_code' => 'TZ',
-                'first_name' => $request->first_name,
+                'first_name' => $validated['first_name'],
                 'middle_name' => '',
-                'last_name' => $request->last_name,
+                'last_name' => $validated['last_name'],
                 'line_1' => $request->address_line_1 ?? '',
                 'line_2' => $request->address_line_2 ?? '',
                 'city' => $request->city ?? '',
@@ -115,60 +107,45 @@ public function setupPesapal()
             ]
         ];
 
-        // Submit order to Pesapal
         $response = $this->pesapalService->submitOrderRequest($orderData);
 
-        // DEBUG: Log the actual response
-        \Log::info('Pesapal Response:', ['response' => $response]);
+        if (!isset($response['redirect_url'])) {
+            \Log::error('Invalid Pesapal response', ['response' => $response]);
 
-        // Check for different possible response structures
-        if (isset($response['redirect_url'])) {
-            // Standard success response
-            $payment->update([
-                'merchant_reference' => $response['merchant_reference'] ?? null,
-                'redirect_url' => $response['redirect_url']
-            ]);
-
+            $message = $response['message'] ?? ($response['error'] ?? 'Unexpected Pesapal response.');
             return response()->json([
-                'success' => true,
-                'redirect_url' => $response['redirect_url'],
-                'order_tracking_id' => $orderTrackingId
-            ]);
+                'success' => false,
+                'message' => $message
+            ], 400);
         }
 
-        // Check for error responses
-        if (isset($response['error'])) {
-            \Log::error('Pesapal Error:', ['error' => $response['error']]);
-            throw new \Exception('Pesapal API Error: ' . json_encode($response['error']));
-        }
+        $payment->update([
+            'merchant_reference' => $response['merchant_reference'] ?? null,
+            'redirect_url' => $response['redirect_url']
+        ]);
 
-        // Check for status-based responses
-        if (isset($response['status']) && $response['status'] !== 'success') {
-            \Log::error('Pesapal Status Error:', ['response' => $response]);
-            $errorMessage = $response['message'] ?? 'Unknown error from Pesapal';
-            throw new \Exception('Pesapal returned status: ' . $response['status'] . ' - ' . $errorMessage);
-        }
+        return response()->json([
+            'success' => true,
+            'redirect_url' => $response['redirect_url'],
+            'order_tracking_id' => $orderTrackingId
+        ]);
 
-        // Log the unexpected response structure
-        \Log::error('Unexpected Pesapal Response Structure:', ['response' => $response]);
-        throw new \Exception('Unexpected response structure from Pesapal: ' . json_encode($response));
-
-    } catch (\Exception $e) {
-        \Log::error('Payment Initiation Error:', [
+    } catch (\Throwable $e) {
+        \Log::error('Payment Initiation Error', [
             'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString()
+            'trace' => config('app.debug') ? $e->getTraceAsString() : 'hidden',
         ]);
 
         return response()->json([
             'success' => false,
-            'message' => $e->getMessage(),
+            'message' => 'Payment initiation failed. Please try again.',
             'debug_info' => config('app.debug') ? [
-                'order_data' => $orderData ?? null,
-                'pesapal_response' => $response ?? null
+                'error' => $e->getMessage(),
             ] : null
-        ], 400);
+        ], 500);
     }
 }
+
 
     /**
      * Handle payment callback
