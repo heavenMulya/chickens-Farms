@@ -19,13 +19,31 @@ class productsRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
-    {
-         return [
-            'name'=>'required|string'
-            ,'weight_range'=>'required|numeric',
-            'unit_price'=>'required|numeric',
-            'total_price'=>'required|numeric'
+   // app/Http/Requests/productsRequest.php
+
+public function rules()
+{
+    // If it's an update request, skip image required
+    if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
+        return [
+            'name' => 'required|string',
+            'discount' => 'required|numeric',
+            'price' => 'required|numeric',
+            'status' => 'required|string',
+            'description' => 'required|string',
+            'image' => 'nullable|file', // not required in update
         ];
     }
+
+    // For store
+    return [
+        'name' => 'required|string',
+        'discount' => 'required|numeric',
+        'price' => 'required|numeric',
+        'status' => 'required|string',
+        'description' => 'required|string',
+        'image' => 'required|file',
+    ];
+}
+
 }

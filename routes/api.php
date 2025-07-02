@@ -19,3 +19,4 @@ Route::get('/payment/failed', function () {
 
 Route::apiResource('products',manageProducts::class);
 Route::apiResource('chickens',ChickenBatchController::class);
+
