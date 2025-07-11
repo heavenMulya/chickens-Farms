@@ -1,0 +1,11 @@
+{
+  "build": {
+    "commands": [
+      "composer install --optimize-autoloader",
+      "mkdir -p storage/app/public/products",
+      "chmod -R 775 storage",
+      "php artisan storage:link",
+      "php artisan migrate --force"
+    ]
+  }
+}
