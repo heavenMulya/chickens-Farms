@@ -176,7 +176,7 @@
 
           <div class="social-login">
             <p>Don't have an account?</p>
-            <a href="register.php" class="btn btn-outline-primary">
+            <a href="Register.php" class="btn btn-outline-primary">
               <i class="fas fa-user-plus me-2"></i>Create Account
             </a>
           </div>
