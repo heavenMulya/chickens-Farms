@@ -135,9 +135,6 @@
     <script>
 
          const token = localStorage.getItem('api_token'); // Or use sessionStorage
-
-           console.log(userId)
-           $('#navbar-username').text(userId)
   if (!token) {
     window.location.href = "login.php"; // Redirect to login if not authenticated
   }
