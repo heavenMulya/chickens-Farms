@@ -356,7 +356,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  const API_URL = 'http://127.0.0.1:8000/api'; // Replace with your actual API URL
+  const API_URL = 'https://chickens-farms-production-6aa9.up.railway.app/api'; // Replace with your actual API URL
 
   $('#registerForm').on('submit', function(e) {
     e.preventDefault();

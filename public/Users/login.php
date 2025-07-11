@@ -187,7 +187,7 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    const API_URL = 'http://127.0.0.1:8000/api';
+    const API_URL = 'https://chickens-farms-production-6aa9.up.railway.app/api';
 
     $('#loginForm').on('submit', function (e) {
       e.preventDefault();
