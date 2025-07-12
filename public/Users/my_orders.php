@@ -173,12 +173,10 @@ $(document).ready(function () {
 console.log('token is'+token)
   if (!token) {
     $('#orders-list').html('<div class="alert alert-danger text-center">You must be logged in to view your orders.</div>');
-   console.log('token is');
+  
     return;
   }
-  else{
-    console.log('token is not');
-  }
+
 
   // Cache filter elements
   const $statusFilter = $('.form-select');
@@ -314,6 +312,7 @@ console.log('token is'+token)
       },
       error: function (err) {
         console.log(err)
+        window.location.href = "login.php";
         $('#orders-list').html('<div class="alert alert-danger text-center">Failed to fetch your orders. Please try Login First</a>.</div>');
       }
     });

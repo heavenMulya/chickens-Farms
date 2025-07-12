@@ -48,8 +48,12 @@ class AuthController extends Controller
         }
 
         // Generate new token on each login
-        $user->api_token = Str::random(60);
-        $user->save();
+
+        if (!$user->api_token) {
+    $user->api_token = Str::random(60);
+    $user->save();
+}
+
 
         return response()->json([
             'message' => 'Login successful',
