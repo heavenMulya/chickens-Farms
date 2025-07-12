@@ -134,10 +134,6 @@
     <!-- Custom JavaScript -->
     <script>
 
-         const token = localStorage.getItem('api_token'); // Or use sessionStorage
-  if (!token) {
-    window.location.href = "login.php"; // Redirect to login if not authenticated
-  }
         // Initialize cart from localStorage
         //let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let cart;
