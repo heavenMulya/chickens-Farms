@@ -69,10 +69,6 @@
  <script src="assets/js/jquery-3.6.0.min.js"></script>
 <script>
 
-         const token = localStorage.getItem('api_token'); // Or use sessionStorage
-  if (!token) {
-    window.location.href = "login.php"; // Redirect to login if not authenticated
-  }
    const userId = localStorage.getItem('user_id');
     const userName = localStorage.getItem('user_name');
     // Or use sessionStorage

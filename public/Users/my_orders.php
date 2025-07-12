@@ -170,10 +170,14 @@
 <script>
 $(document).ready(function () {
   const token = localStorage.getItem('api_token');
-
+console.log('token is'+token)
   if (!token) {
     $('#orders-list').html('<div class="alert alert-danger text-center">You must be logged in to view your orders.</div>');
+   console.log('token is');
     return;
+  }
+  else{
+    console.log('token is not');
   }
 
   // Cache filter elements
@@ -310,7 +314,7 @@ $(document).ready(function () {
       },
       error: function (err) {
         console.log(err)
-        $('#orders-list').html('<div class="alert alert-danger text-center">Failed to fetch your orders. Please try again later.</div>');
+        $('#orders-list').html('<div class="alert alert-danger text-center">Failed to fetch your orders. Please try Login First</a>.</div>');
       }
     });
   }
