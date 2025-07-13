@@ -163,7 +163,8 @@ function handleCreatewithnoimage({
   containerSelector = '#add', // <--- modal ID here
   url,
   modalSelector = '#add',
-     batchSelector = '#batch_code' 
+     batchSelector = '#batch_code' ,
+     batchType = 'broiler'
   //successAlertSelector = '#success-alert',
   //errorAlertSelector = '#error-alert',
   //successMessageSelector = '#success-message',
@@ -174,7 +175,8 @@ function handleCreatewithnoimage({
      $(modalSelector).on('show.bs.modal', function () {
        getBatch({
          selector: batchSelector,
-         selected: null   // default to "No Batch"
+         selected: null,
+         type: batchType   // default to "No Batch"
        });
      });
 
@@ -222,7 +224,8 @@ function handleCreate({
   containerSelector = '#add', // <--- modal ID here
   url,
   modalSelector = '#add',
-     batchSelector = '#batch_code' 
+     batchSelector = '#batch_code',
+     batchType = 'broiler' 
  // successAlertSelector = '#success-alert',
  // errorAlertSelector = '#error-alert',
  // successMessageSelector = '#success-message',
@@ -233,7 +236,8 @@ function handleCreate({
      $(modalSelector).on('show.bs.modal', function () {
        getBatch({
          selector: batchSelector,
-         selected: null   // default to "No Batch"
+         selected: null ,
+         type: batchType  // default to "No Batch"
        });
      });
 

@@ -152,33 +152,33 @@
                     <div id="daily" style="display: none;">
                     <div class="col-12" >
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Total Eggs Quantity</label>
                             <input type="text"  id="total_eggs" name="total_eggs"  placeholder="Enter total eggs" ></textarea>
                         </div>
                     </div>
                         <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Broken Eggs Quantity</label>
                             <input type="text"  id="broken_eggs" name="broken_eggs"  placeholder="Enter broken eggs"></textarea>
                         </div>
                     </div>
                         <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Good Eggs Quantity</label>
                             <input type="text"  id="good_eggs" name="good_eggs"  placeholder="Enter good eggs"></textarea>
                         </div>
                     </div>
     </div>
                         <div class="col-12" id="sales" style="display: none;">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Sold Eggs Quantity</label>
                             <input type="text"  id="sold_eggs" name="sold_eggs"  placeholder="Enter sold eggs"></textarea>
                         </div>
                     </div>
 
                       <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Remarks</label>
                             <input type="text"  id="remarks" name="remarks"  placeholder="Enter Remarks"></textarea>
                         </div>
                     </div>
@@ -233,33 +233,33 @@
                     <div>
                     <div class="col-12" >
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Total Eggs Quantity</label>
                             <input type="text"  id="edit_total_eggs" name="total_eggs"  placeholder="Enter total eggs" ></textarea>
                         </div>
                     </div>
                         <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Broken Eggs Quantity</label>
                             <input type="text"  id="edit_broken_eggs" name="broken_eggs"  placeholder="Enter broken eggs"></textarea>
                         </div>
                     </div>
                         <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Good Eggs Quantity</label>
                             <input type="text"  id="edit_good_eggs" name="good_eggs"  placeholder="Enter good eggs"></textarea>
                         </div>
                     </div>
     </div>
                         <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2">Sold Eggs Quantity</i></label>
                             <input type="text"  id="edit_sold_eggs" name="sold_eggs"  placeholder="Enter sold eggs"></textarea>
                         </div>
                     </div>
 
                       <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Remarks</label>
                             <input type="text"  id="edit_remarks" name="remarks"  placeholder="Enter Remarks"></textarea>
                         </div>
                     </div>
@@ -431,7 +431,8 @@ $(document).ready(function () {
   handleCreatewithnoimage({
     buttonSelector: '#save',
     containerSelector: '#add',
-    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/eggs'
+    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/eggs',
+     batchType: 'layer'
   });
 
   handleEditModalOpen({

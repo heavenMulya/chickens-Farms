@@ -155,14 +155,14 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Chicken Quantity</label>
                             <input type="text"  id="quantity" name="quantity"  placeholder="Enter Chicken Quantity"></textarea>
                         </div>
                     </div>
 
                       <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Remarks</label>
                             <input type="text"  id="remarks" name="remarks"  placeholder="Enter Remarks"></textarea>
                         </div>
                     </div>
@@ -223,14 +223,14 @@
                     </div>
                     <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Chicken Quantity</label>
                             <input type="text"  id="edit_quantity" name="quantity"  placeholder="Enter Chicken Quantity"></textarea>
                         </div>
                     </div>
 
                       <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i></label>
+                            <label><i class="fas fa-align-left me-2"></i>Remarks</label>
                             <input type="text"  id="edit_remarks" name="remarks"  placeholder="Enter Remarks"></textarea>
                         </div>
                     </div>
@@ -380,7 +380,8 @@ $(document).ready(function () {
   handleCreatewithnoimage({
     buttonSelector: '#save',
     containerSelector: '#add',
-    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/chickensEntries'
+    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/chickensEntries',
+    type: 'broiler'
    
   });
 
