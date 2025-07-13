@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\OrderItem;
+use Illuminate\Support\Str;
+
 
 class OrderController extends Controller
 {
@@ -185,13 +187,15 @@ class OrderController extends Controller
     $orders = $query->get();
 
     // ✅ Transform product image paths to full URLs
-    foreach ($orders as $order) {
-        foreach ($order->items as $item) {
-            if ($item->product && $item->product->image) {
+  foreach ($orders as $order) {
+    foreach ($order->items as $item) {
+        if ($item->product && $item->product->image) {
+            if (!Str::startsWith($item->product->image, ['http://', 'https://'])) {
                 $item->product->image = asset('storage/' . $item->product->image);
             }
         }
     }
+}
 
     return response()->json([
         'message' => 'User orders fetched successfully',
