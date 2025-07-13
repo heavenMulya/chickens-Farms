@@ -309,27 +309,23 @@ function handleEditModalOpen({
 }
 
 
-
-
-function getBatch({ selector = '#batch_code', selected = null } = {}) {
+function getBatch({ selector = '#batch_code', selected = null, type = 'broiler' } = {}) {
   return $.ajax({
-    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/chicken-batches',
+    url: `https://chickens-farms-production-6aa9.up.railway.app/api/chicken-batches?type=${type}`,
     method: 'GET',
     success: function (res) {
       if (res.success) {
         const dropdown = $(selector);
         dropdown.empty();
 
-        // ✅ Option 1: Add default + mark as selected if applicable
         dropdown.append(
           $('<option>', {
             value: '',
             text: 'No Batch / General Expense',
-            selected: !selected // selected if selected is null or ''
+            selected: !selected
           })
         );
 
-        // ✅ Option 2: Loop through batches
         res.data.forEach(batch => {
           dropdown.append(
             $('<option>', {
@@ -340,7 +336,7 @@ function getBatch({ selector = '#batch_code', selected = null } = {}) {
           );
         });
 
-        dropdown.trigger('change'); // For Select2 if used
+        dropdown.trigger('change');
       }
     },
     error: function () {
@@ -348,7 +344,6 @@ function getBatch({ selector = '#batch_code', selected = null } = {}) {
     }
   });
 }
-
 
 
 

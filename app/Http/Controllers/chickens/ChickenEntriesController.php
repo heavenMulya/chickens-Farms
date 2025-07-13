@@ -46,17 +46,26 @@ class ChickenEntriesController extends Controller
 }
 
 
-        public function getBatches()
-    {
-        $batches = ChickenBatch::orderBy('batch_code')
-                      ->get(['id', 'batch_code']);
 
-        return response()->json([
-            'success' => true,
-            'data'    => $batches,
-        ]);
+public function getBatches(Request $request)
+{
+    $type = $request->input('type'); // expects 'broiler' or 'layer'
+
+    $query = ChickenBatch::query();
+
+    if ($type === 'broiler') {
+        $query->where('batch_type', 'broiler');
+    } elseif ($type === 'layer') {
+        $query->where('batch_type', 'layer');
     }
 
+    $batches = $query->orderBy('batch_code')->get(['id', 'batch_code']);
+
+    return response()->json([
+        'success' => true,
+        'data'    => $batches,
+    ]);
+}
 
     /**
      * Store a newly created resource in storage.

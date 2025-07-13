@@ -402,6 +402,12 @@ $(document).ready(function () {
     urlPrefix: 'https://chickens-farms-production-6aa9.up.railway.app/api/chickensEntries'
   });
   
+  getBatch({
+  selector: '#batch_code',
+  selected: null,
+  type: 'broiler'
+});
+
 })
 
 </script>

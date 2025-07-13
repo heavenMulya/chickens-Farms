@@ -1,7 +1,7 @@
 
 <?php include 'navigation_bar.php' ?>
 <?php include 'sidebar.php' ?>
-<div class="page-wrapper mt-5">
+<div class="page-wrapper">
     <!-- Success Alert -->
      <div class="row">
         <div class="col-6">
@@ -451,6 +451,13 @@ $(document).ready(function () {
     triggerSelector: '.openDeleteModal',
     urlPrefix: 'https://chickens-farms-production-6aa9.up.railway.app/api/eggs'
   });
+
+  getBatch({
+  selector: '#batch_code',
+  selected: null,
+  type: 'layer'
+});
+
   
 })
 
