@@ -145,7 +145,7 @@ class OrderController extends Controller
 
 
 
-  public function viewUserOrders(Request $request)
+ public function viewUserOrders(Request $request)
 {
     $user = auth()->user();
 
@@ -154,9 +154,10 @@ class OrderController extends Controller
     }
 
     $query = Order::where('user_id', $user->id)
-        ->with(['items.product']) // eager load items and products
+        ->with(['items.product']) // Eager load items + product
         ->orderBy('created_at', 'desc');
 
+    // Optional filters
     if ($request->filled('status')) {
         $status = strtolower($request->status);
         $query->where('status', $status);
@@ -172,7 +173,6 @@ class OrderController extends Controller
 
     if ($request->filled('search')) {
         $search = $request->search;
-
         $query->where(function ($q) use ($search) {
             $q->where('id', $search)
               ->orWhere('status', 'like', "%$search%")
@@ -184,11 +184,21 @@ class OrderController extends Controller
 
     $orders = $query->get();
 
+    // ✅ Transform product image paths to full URLs
+    foreach ($orders as $order) {
+        foreach ($order->items as $item) {
+            if ($item->product && $item->product->image) {
+                $item->product->image = asset('storage/' . $item->product->image);
+            }
+        }
+    }
+
     return response()->json([
         'message' => 'User orders fetched successfully',
         'orders' => $orders,
     ]);
 }
+
 
 
 public function reorder(Request $request, $id)
