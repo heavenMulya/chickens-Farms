@@ -8,12 +8,13 @@ Route::get('/', function () {
    return Redirect::to('Users/dashboard.php');
 });
 
+
 Route::get('/storage/products/{filename}', function ($filename) {
-    $path = storage_path('app/public/storage/products/' . $filename);
+    $path = storage_path('app/public/products/' . $filename);
 
     if (!file_exists($path)) {
         abort(404);
     }
 
-    return Response::file($path);
+    return response()->file($path);
 });
