@@ -23,17 +23,15 @@ class EggController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-   public function store(Request $request)
+public function store(Request $request)
 {
     $entryType = $request->input('entry_type');
 
-    // Validate 'entry_type' is present and either 'daily' or 'sales'
     $request->validate([
         'entry_type' => 'required|in:daily,sales',
     ]);
 
     if ($entryType === 'daily') {
-        // Validate daily entry fields
         $request->validate([
             'batch_code' => 'required|string|exists:chicken_stocks,batch_code',
             'total_eggs' => 'required|integer|min:0',
@@ -42,24 +40,23 @@ class EggController extends Controller
             'remarks' => 'required|string',
         ]);
 
-       $total = (int) trim($request->total_eggs);
-$broken = (int) trim($request->broken_eggs);
-$good = (int) trim($request->good_eggs);
+        $total = (int) trim($request->total_eggs);
+        $broken = (int) trim($request->broken_eggs);
+        $good = (int) trim($request->good_eggs);
 
-if ($total !== ($broken + $good)) {
-    return response()->json([
-        'error' => 'Total eggs must be equal to broken eggs plus good eggs.'
-    ], 422);
-}
+        if ($total !== ($broken + $good)) {
+            return response()->json([
+                'error' => 'Total eggs must be equal to broken eggs plus good eggs.'
+            ], 422);
+        }
 
-
-        // Create or update record for this date (if exists)
         $egg = Egg::updateOrCreate(
             ['batch_code' => $request->batch_code],
             [
                 'total_eggs' => $total,
                 'broken_eggs' => $broken,
                 'good_eggs' => $good,
+                'remarks' => $request->remarks,
             ]
         );
 
@@ -69,19 +66,25 @@ if ($total !== ($broken + $good)) {
         ], 201);
 
     } elseif ($entryType === 'sales') {
-        // Validate sales entry fields
         $request->validate([
             'batch_code' => 'required|string|exists:chicken_stocks,batch_code',
             'sold_eggs' => 'required|integer|min:0',
         ]);
 
-         // Create or update record for this date (if exists)
-        $egg = Egg::updateOrCreate(
-            ['batch_code' => $request->batch_code],
-            [
-                'sold_eggs' => $request->sold_eggs,
-            ]
-        );
+        $egg = Egg::where('batch_code', $request->batch_code)->first();
+
+        if (!$egg) {
+            return response()->json(['error' => 'No egg record found for this batch.'], 404);
+        }
+
+        if ($request->sold_eggs > $egg->good_eggs) {
+            return response()->json([
+                'error' => 'Sold eggs cannot be greater than available good eggs.'
+            ], 422);
+        }
+
+        $egg->sold_eggs = $request->sold_eggs;
+        $egg->save();
 
         return response()->json([
             'message' => 'Sales quantity updated successfully.',
@@ -112,11 +115,9 @@ if ($total !== ($broken + $good)) {
     /**
      * Update the specified resource in storage.
      */
-   public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
-
-    // Find the egg record by date
-    $egg = Egg::where('id', $id)->first();
+    $egg = Egg::find($id);
 
     if (!$egg) {
         return response()->json([
@@ -124,30 +125,44 @@ if ($total !== ($broken + $good)) {
         ], 404);
     }
 
-            $total = (int) trim($request->total_eggs);
-$broken = (int) trim($request->broken_eggs);
-$good = (int) trim($request->good_eggs);
+    $request->validate([
+        'total_eggs' => 'required|integer|min:0',
+        'broken_eggs' => 'required|integer|min:0',
+        'good_eggs' => 'required|integer|min:0',
+        'sold_eggs' => 'nullable|integer|min:0',
+        'remarks' => 'nullable|string',
+    ]);
 
-if ($total !== ($broken + $good)) {
-    return response()->json([
-        'error' => 'Total eggs must be equal to broken eggs plus good eggs.'
-    ], 422);
-}
+    $total = (int) trim($request->total_eggs);
+    $broken = (int) trim($request->broken_eggs);
+    $good = (int) trim($request->good_eggs);
+    $sold = (int) $request->sold_eggs ?? 0;
 
-        // Update daily fields
-        $egg->total_eggs = $request->total_eggs;
-        $egg->broken_eggs = $request->broken_eggs;
-        $egg->good_eggs = $request->good_eggs;
-        $egg->sold_eggs = $request->sold_eggs;
-
-        $egg->save();
-
+    if ($total !== ($broken + $good)) {
         return response()->json([
-            'message' => 'Daily egg record updated successfully.',
-            'data' => $egg
-        ], 200);
+            'error' => 'Total eggs must be equal to broken eggs plus good eggs.'
+        ], 422);
+    }
 
+    if ($sold > $good) {
+        return response()->json([
+            'error' => 'Sold eggs cannot be greater than good eggs.'
+        ], 422);
+    }
+
+    $egg->total_eggs = $total;
+    $egg->broken_eggs = $broken;
+    $egg->good_eggs = $good;
+    $egg->sold_eggs = $sold;
+    $egg->remarks = $request->remarks ?? $egg->remarks;
+    $egg->save();
+
+    return response()->json([
+        'message' => 'Egg record updated successfully.',
+        'data' => $egg
+    ], 200);
 }
+
 
     /**
      * Remove the specified resource from storage.

@@ -74,20 +74,36 @@ public function store(Request $request)
     try {
         DB::beginTransaction();
 
-        // Initialize fields for chicken_entries
+        $stock = ChickenStock::where('batch_code', $request->batch_code)->firstOrFail();
+        $quantity = (int) $request->quantity;
+
         $dead = 0;
         $slaughtered = 0;
         $sold = 0;
 
+        // Calculate remaining chickens
+        $used = $stock->dead + $stock->slaughtered;
+        $remaining = $stock->starting_total - $used;
+
         if ($request->entry_type === 'death') {
-            $dead = $request->quantity;
+            if ($quantity > $remaining) {
+                return response()->json(['error' => 'Death quantity exceeds remaining chickens.'], 422);
+            }
+            $dead = $quantity;
+
         } elseif ($request->entry_type === 'slaughter') {
-            $slaughtered = $request->quantity;
+            if ($quantity > $remaining) {
+                return response()->json(['error' => 'Slaughter quantity exceeds remaining chickens.'], 422);
+            }
+            $slaughtered = $quantity;
+
         } elseif ($request->entry_type === 'sold') {
-            $sold = $request->quantity;
+            if ($stock->sold + $quantity > $stock->slaughtered) {
+                return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity.'], 422);
+            }
+            $sold = $quantity;
         }
 
-        // Save entry
         $entry = ChickenEntry::create([
             'batch_code'   => $request->batch_code,
             'entry_date'   => $request->entry_date,
@@ -97,19 +113,13 @@ public function store(Request $request)
             'remarks'      => $request->remarks
         ]);
 
-        // Update stock
-        $stock = ChickenStock::where('batch_code', $request->batch_code)->firstOrFail();
-
-        // Update values
-        $stock->dead        += $dead;
+        // Update stock values
+        $stock->dead += $dead;
         $stock->slaughtered += $slaughtered;
-        $stock->sold        += $sold;
+        $stock->sold += $sold;
 
-        // Recalculate derived fields
-       // $stock->unslaughtered_remaining = $stock->starting_total - $stock->dead - $stock->slaughtered;
-       // $stock->slaughtered_unsold     = $stock->slaughtered - $stock->sold;
-        $stock->total_remaining        = $stock->unslaughtered_remaining + $stock->slaughtered_unsold;
-
+        // Optional: Recalculate remaining fields
+        $stock->total_remaining = $stock->unslaughtered_remaining + $stock->slaughtered_unsold;
         $stock->save();
 
         DB::commit();
@@ -119,6 +129,7 @@ public function store(Request $request)
             'message' => 'Chicken entry and stock updated successfully',
             'data'    => $entry
         ]);
+
     } catch (\Exception $e) {
         DB::rollBack();
 
@@ -129,6 +140,7 @@ public function store(Request $request)
         ], 500);
     }
 }
+
 
 
 
@@ -155,11 +167,11 @@ public function store(Request $request)
     /**
      * Update the specified resource in storage.
      */
- public function update(Request $request, $id)
+public function update(Request $request, $id)
 {
     $request->validate([
         'quantity' => 'required|integer|min:1',
-        'entry_type' => 'required|string|in:death,slaughtered,sold', // validate entry_type
+        'entry_type' => 'required|string|in:death,slaughtered,sold',
     ]);
 
     try {
@@ -168,42 +180,58 @@ public function store(Request $request)
         $entry = ChickenEntry::findOrFail($id);
         $stock = ChickenStock::where('batch_code', $entry->batch_code)->firstOrFail();
 
+        $newQty = (int) $request->quantity;
+        $type = strtolower(trim($request->entry_type));
+
         $oldQty = 0;
         $column = null;
-
-        // Use the entry_type from the request, NOT from DB
-        $type = strtolower(trim($request->entry_type));
 
         switch ($type) {
             case 'death':
                 $oldQty = $entry->dead;
                 $column = 'dead';
+
+                // Check against remaining
+                $used = $stock->dead + $stock->slaughtered - $oldQty;
+                $remaining = $stock->starting_total - $used;
+                if ($newQty > $remaining) {
+                    return response()->json(['error' => 'Death quantity exceeds remaining chickens.'], 422);
+                }
                 break;
+
             case 'slaughtered':
                 $oldQty = $entry->slaughtered;
                 $column = 'slaughtered';
+
+                // Check against remaining
+                $used = $stock->dead + $stock->slaughtered - $oldQty;
+                $remaining = $stock->starting_total - $used;
+                if ($newQty > $remaining) {
+                    return response()->json(['error' => 'Slaughter quantity exceeds remaining chickens.'], 422);
+                }
                 break;
+
             case 'sold':
                 $oldQty = $entry->sold;
                 $column = 'sold';
+
+                // Check against slaughtered
+                $currentSold = $stock->sold - $oldQty;
+                if ($currentSold + $newQty > $stock->slaughtered) {
+                    return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity.'], 422);
+                }
                 break;
+
+            default:
+                return response()->json(['error' => 'Invalid entry type'], 400);
         }
 
-        if ($column === null) {
-            throw new \Exception('Invalid entry type.');
-        }
-
-        $newQty = $request->quantity;
-        $diff = $newQty - $oldQty;
-
-        // Update entry and stock
+        // Update entry
         $entry->$column = $newQty;
         $entry->save();
 
-        $stock->$column += $diff;
-
-     
-
+        // Update stock
+        $stock->$column = ($stock->$column - $oldQty) + $newQty;
         $stock->save();
 
         DB::commit();
@@ -224,6 +252,7 @@ public function store(Request $request)
         ], 500);
     }
 }
+
 
 
 
