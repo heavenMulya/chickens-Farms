@@ -11,6 +11,12 @@ use App\Models\OrderItem;
 class OrderController extends Controller
 {
 
+     public function index()
+    {
+        $orders = Order::with('items')->orderByDesc('created_at')->paginate(10);
+        return response()->json(['data'=>$orders]);
+    }
+
   public function store(Request $request)
 {
     $validated = $request->validate([
@@ -47,6 +53,17 @@ class OrderController extends Controller
 
 }
 
+ public function show($id)
+    {
+        $order = Order::with('items')->find($id);
+
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        return response()->json($order);
+    }
+
  public function updateOrderStatus($id, Request $request)
 {
     $request->validate([
@@ -61,6 +78,43 @@ class OrderController extends Controller
     }
 
     $order = Order::where('id', $id)->where('user_id', $user->id)->first();
+
+    if (!$order) {
+        return response()->json(['message' => 'Order not found'], 404);
+    }
+
+    if ($order->status === 'delivered') {
+        return response()->json(['message' => 'Cannot change status of a delivered order'], 400);
+    }
+
+    // Update status
+    $order->status = $request->status;
+
+    // If status is cancelled, save the reason if provided
+    if ($request->status === 'cancelled' && $request->filled('cancel_reason')) {
+        $order->cancel_reason = $request->cancel_reason;
+    } else {
+        // Optional: clear cancel_reason if not cancelled or not provided
+        $order->cancel_reason = null;
+    }
+
+    $order->save();
+
+    return response()->json([
+        'message' => "Order marked as {$request->status} successfully",
+        'order' => $order
+    ]);
+}
+
+ public function updateOrderStatusAdmin($id, Request $request)
+{
+    $request->validate([
+        'status' => 'required|string|in:cancelled,paid',
+        'cancel_reason' => 'nullable|string|max:1000',  // Allow optional cancel reason
+    ]);
+
+
+    $order = Order::where('id', $id)->first();
 
     if (!$order) {
         return response()->json(['message' => 'Order not found'], 404);
@@ -175,6 +229,20 @@ public function reorder(Request $request, $id)
 
 }
 
+
+  public function destroy($id)
+    {
+        $order = Order::find($id);
+
+        if (!$order) {
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        $order->items()->delete();
+        $order->delete();
+
+        return response()->json(['message' => 'Order deleted successfully']);
+    }
     
 
 }

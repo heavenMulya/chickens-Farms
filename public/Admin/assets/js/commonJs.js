@@ -62,7 +62,7 @@ function dynamicGet({
         success: function (response) {
          
             const data = response.data.data;
-            console.log(data)
+            console.log(response)
         $('#no-data').hide();
     $('#table-container').hide();
     $('#pagination-container').hide();
@@ -99,7 +99,7 @@ function dynamicGet({
         error: function (error) {
             if (typeof onError === 'function') onError(error);
             else console.error('Fetch error:', error);
-
+console.log(error)
             $('#loader').hide();
             $('#no-data').show();
         }
@@ -365,6 +365,7 @@ function handleEditSubmit({
     e.preventDefault();
 
     // 1. Get form data with proper file handling
+    const userId = $(this).data('user_id');
     const formData = new FormData();
     const container = $(containerSelector);
     
@@ -382,6 +383,9 @@ function handleEditSubmit({
       }
     });
 
+  if (userId) {
+      formData.append('user_id', userId);
+    }
     // For Laravel's method spoofing
     formData.append('_method', 'PUT');
 

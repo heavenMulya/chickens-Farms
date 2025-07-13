@@ -9,6 +9,7 @@ use App\Http\Controllers\expenses\DailyExpenseController;
 use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Users\userManagement;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -36,6 +37,7 @@ Route::get('/products/search', [manageProducts::class, 'searching']);
 Route::get('/chickens/search', [ChickenBatchController::class, 'searching']);
 Route::get('/eggs/search', [EggController::class, 'searching']);
 Route::get('/expenses/search', [DailyExpenseController::class, 'searching']);
+Route::get('/users/search', [userManagement::class, 'searching']);
 Route::get('/chickensEntries/Entries/search', [ChickenEntriesController::class, 'searching']);
 Route::apiResource('products',manageProducts::class);
 
@@ -46,6 +48,7 @@ Route::get('chicken-batches', [ChickenEntriesController::class, 'getBatches']);
 
 Route::apiResource('eggs',EggController::class);
 Route::apiResource('expenses',DailyExpenseController::class);
+Route::apiResource('users',userManagement::class);
 
 
 Route::prefix('reports')->group(function () {
@@ -64,7 +67,10 @@ Route::post('/orders', [OrderController::class, 'store']);
 
 
 Route::put('/orders/{id}/status', [OrderController::class, 'updateOrderStatus']);
+Route::put('/orders/{id}', [OrderController::class, 'updateOrderStatusAdmin']);
 
-Route::get('/customer-orders/{phone}', [OrderController::class, 'getOrdersByPhone']);
+    Route::get('/orders', [OrderController::class, 'index']);
+    Route::get('/orders/{id}', [OrderController::class, 'show']);
+    Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 
 Route::middleware('auth:api')->put('/orders/{order}/reorder', [OrderController::class, 'reorder']);

@@ -7,10 +7,10 @@
 <a href="index.php"><img src="assets/img/icons/dashboard.svg" alt="img"><span> Dashboard</span> </a>
 </li>
 <li class="">
-<a href="/index.html"><img src="assets/img/icons/sales1.svg" alt="img"><span>POS</span></a>
+<a href="/Users/dashboard.php"><img src="assets/img/icons/sales1.svg" alt="img"><span>POS</span></a>
 </li>
 <li class="">
-<a href=""><img src="assets/img/icons/sales1.svg" alt="img"><span>Customer Order
+<a href="customer_order.php"><img src="assets/img/icons/sales1.svg" alt="img"><span>Customer Order
     <span class="badge bg-success text-white">5</span></span></a>
 </li>
 <li class="">
@@ -27,8 +27,8 @@
 <a href="eggProduction.php" ><img src="assets/img/icons/purchase1.svg" alt="img"><span> Egg Production</span></a>
 </li>
 
-<li class="submenu">
-<a href="javascript:void(0);"><img src="assets/img/icons/quotation1.svg" alt="img"><span> Customers</span> <span class="menu-arrow"></span></a>
+<li class="">
+<a href="Users.php"><img src="assets/img/icons/quotation1.svg" alt="img"><span> Users</span></a>
 </li>
 <li class="">
 <a href="expnsenses.php"><img src="assets/img/icons/transfer1.svg" alt="img"><span>Expenses</span></a>
