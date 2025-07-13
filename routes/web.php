@@ -9,7 +9,7 @@ Route::get('/', function () {
 });
 
 Route::get('/storage/products/{filename}', function ($filename) {
-    $path = storage_path('app/public/products/' . $filename);
+    $path = storage_path('app/public/storage/products/' . $filename);
 
     if (!file_exists($path)) {
         abort(404);
