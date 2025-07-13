@@ -238,7 +238,7 @@ console.log('token is'+token)
                 console.log(order);
               itemsHtml += `
                 <div class="item-row">
-                  <img src="https://via.placeholder.com/60x60/d4342c/ffffff?text=🍗" class="item-image" alt="${item.title}">
+                  <img src="${item.product.image}" class="item-image" alt="${item.title}">
                   <div class="item-details">
                     <div class="item-name">${item.title}</div>
                     <div class="item-description">Product ID: ${item.product_id}</div>

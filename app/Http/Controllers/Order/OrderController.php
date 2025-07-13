@@ -145,48 +145,43 @@ class OrderController extends Controller
 
 
 
-   public function viewUserOrders(Request $request)
+  public function viewUserOrders(Request $request)
 {
-    // Get authenticated user
     $user = auth()->user();
 
     if (!$user) {
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-    // Start query for user's orders
-    $query = Order::where('user_id', $user->id)->with('items')->orderBy('created_at', 'desc');
+    $query = Order::where('user_id', $user->id)
+        ->with(['items.product']) // eager load items and products
+        ->orderBy('created_at', 'desc');
 
-    // Apply status filter if provided (case insensitive)
     if ($request->filled('status')) {
         $status = strtolower($request->status);
         $query->where('status', $status);
     }
 
-    // Apply from_date filter if provided (created_at >= from_date)
     if ($request->filled('from_date')) {
         $query->whereDate('created_at', '>=', $request->from_date);
     }
 
-    // Apply to_date filter if provided (created_at <= to_date)
     if ($request->filled('to_date')) {
         $query->whereDate('created_at', '<=', $request->to_date);
     }
 
-    // Apply search filter if provided
     if ($request->filled('search')) {
         $search = $request->search;
 
         $query->where(function ($q) use ($search) {
-            $q->where('id', $search) // search by exact order id
-              ->orWhere('status', 'like', "%$search%") // status partial match
-              ->orWhereHas('items', function ($q2) use ($search) { // item title partial match
+            $q->where('id', $search)
+              ->orWhere('status', 'like', "%$search%")
+              ->orWhereHas('items', function ($q2) use ($search) {
                   $q2->where('title', 'like', "%$search%");
               });
         });
     }
 
-    // Execute query and get orders
     $orders = $query->get();
 
     return response()->json([
@@ -194,6 +189,7 @@ class OrderController extends Controller
         'orders' => $orders,
     ]);
 }
+
 
 public function reorder(Request $request, $id)
 {
