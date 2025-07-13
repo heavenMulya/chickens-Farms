@@ -31,7 +31,7 @@
         <!-- Page Header -->
         <div class="page-header d-flex justify-content-between align-items-center">
             <div class="page-title">
-                <h4><i class="fas fa-box floating me-2"></i>Expenses Lists</h4>
+                <h4>Expenses Lists</h4>
                 <h6>Manage your Expenses with style</h6>
             </div>
             <div class="page-btn">

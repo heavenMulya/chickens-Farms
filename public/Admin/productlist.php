@@ -1,7 +1,7 @@
 
 <?php include 'navigation_bar.php' ?>
 <?php include 'sidebar.php' ?>
-<div class="page-wrapper mt-5">
+<div class="page-wrapper">
    <!-- Success Alert -->
      <div class="row">
         <div class="col-6">
@@ -31,7 +31,7 @@
         <!-- Page Header -->
         <div class="page-header d-flex justify-content-between align-items-center">
             <div class="page-title">
-                <h4><i class="fas fa-box floating me-2"></i>Product List</h4>
+                <h4>Product List</h4>
                 <h6>Manage your products with style</h6>
             </div>
             <div class="page-btn">

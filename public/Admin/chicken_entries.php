@@ -31,7 +31,7 @@
         <!-- Page Header -->
         <div class="page-header d-flex justify-content-between align-items-center">
             <div class="page-title">
-                <h4><i class="fas fa-box floating me-2"></i>Chickens Entries List</h4>
+                <h4>Chickens Entries List</h4>
                 <h6>Manage your Chickens death,sales,slaugter with style</h6>
             </div>
             <div class="page-btn">

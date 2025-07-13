@@ -1816,7 +1816,7 @@ div#global-loader,
     -webkit-transition: all .2s ease;
     -ms-transition: all .2s ease;
     transition: all .2s ease;
-    margin-top:50px;
+    margin-top:10px;
 }
 
 @media(max-width:991px) {
@@ -8394,7 +8394,7 @@ span.select2-container.select2-container--default.select2-container--open {
         /* Search Box Styling */
         .search-container {
             position: relative;
-            max-width: 400px;
+            max-width: 800px;
             margin-bottom: 1.5rem;
         }
 
