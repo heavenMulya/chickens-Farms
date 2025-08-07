@@ -187,7 +187,7 @@ $(document).ready(function () {
   $('#no-data').hide();
 
   $.ajax({
-    url: `http://localhost:8000/api/orders/search`,
+    url: `/api/orders/search`,
     method: 'GET',
     data: { search, page, per_page: perPage },
     success: function (response) {
@@ -242,7 +242,7 @@ $(document).ready(function () {
 
 
   dynamicGet({
-    url: `http://localhost:8000/api/orders`,
+    url: `/api/orders`,
     renderRow: renderRowTemplate
   });
 
@@ -358,7 +358,7 @@ function renderDeliveryBadge(option) {
     if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) return;
     const perPage = $('#entriesPerPage').val() || 10;
     dynamicGet({
-      url: `http://localhost:8000/api/orders/?page=${page}&per_page=${perPage}`,
+      url: `/api/orders/?page=${page}&per_page=${perPage}`,
       renderRow: renderRowTemplate
     });
   });
@@ -366,7 +366,7 @@ function renderDeliveryBadge(option) {
   $(document).on('change', '#entriesPerPage', function () {
     const perPage = $(this).val();
     dynamicGet({
-      url: `http://localhost:8000/api/orders/?page=1&per_page=${perPage}`,
+      url: `/api/orders/?page=1&per_page=${perPage}`,
       renderRow: renderRowTemplate
     });
   });
@@ -374,7 +374,7 @@ function renderDeliveryBadge(option) {
   handleCreatewithnoimage({
     buttonSelector: '#save',
     containerSelector: '#add',
-    url: 'http://localhost:8000/api/orders'
+    url: '/api/orders'
    
   });
 
@@ -388,12 +388,12 @@ function renderDeliveryBadge(option) {
     buttonSelector: '#edit_btn',
     containerSelector: '#edit',
     idFieldName: 'id',
-    urlPrefix: 'http://localhost:8000/api/orders'
+    urlPrefix: '/api/orders'
   });
 
   handleDelete({
     triggerSelector: '.openDeleteModal',
-    urlPrefix: 'http://localhost:8000/api/orders'
+    urlPrefix: '/api/orders'
   });
   
 })

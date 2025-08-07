@@ -14,9 +14,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:users,name',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6|confirmed',
+            'role' => 'nullable|integer|in:1,2',
         ]);
 
         $user = User::create([
@@ -24,6 +25,7 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'api_token' => Str::random(60),
+            'role' => $request->input('role', 1),
         ]);
 
         return response()->json([
@@ -33,7 +35,6 @@ class AuthController extends Controller
         ]);
     }
 
-    // Login user
     public function login(Request $request)
     {
         $request->validate([
@@ -48,21 +49,23 @@ class AuthController extends Controller
         }
 
         // Generate new token on each login
-
         if (!$user->api_token) {
-    $user->api_token = Str::random(60);
-    $user->save();
-}
+            $user->api_token = Str::random(60);
+            $user->save();
+        }
 
+        // Determine redirect URL based on role
+      
 
         return response()->json([
             'message' => 'Login successful',
             'user' => $user,
             'api_token' => $user->api_token,
+            //'redirect_url' => $redirectUrl,
         ]);
     }
 
-    // Logout user (optional)
+    // Logout user
     public function logout(Request $request)
     {
         $token = $request->header('Authorization');
@@ -82,5 +85,19 @@ class AuthController extends Controller
 
         return response()->json(['message' => 'Logged out successfully']);
     }
+
+      public function checkAuth(Request $request)
+    {
+        $user = $request->user('api');
+        if (!$user) {
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+
+        return response()->json([
+            'message' => 'Authenticated',
+            'user' => $user->only('id', 'name', 'email', 'role')
+        ]);
+    }
+
 }
 

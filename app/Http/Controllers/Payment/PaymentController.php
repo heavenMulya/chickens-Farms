@@ -150,52 +150,55 @@ public function setupPesapal()
     /**
      * Handle payment callback
      */
-    public function paymentCallback(Request $request)
-    {
-        $orderTrackingId = $request->get('OrderTrackingId');
-        $merchantReference = $request->get('OrderMerchantReference');
+ public function paymentCallback(Request $request)
+{
+    $orderTrackingId = $request->get('OrderTrackingId');
+    $merchantReference = $request->get('OrderMerchantReference');
 
-        if (!$orderTrackingId) {
-            return redirect()->route('payment.failed')
-                ->with('error', 'Invalid payment callback');
+    if (!$orderTrackingId) {
+        return redirect()->route('payment.failed')
+            ->with('error', 'Invalid payment callback');
+    }
+
+    try {
+        // Get transaction status from Pesapal
+        $status = $this->pesapalService->getTransactionStatus($orderTrackingId);
+
+        // ✅ Log the full response for debugging
+        \Log::info('Pesapal callback status:', $status);
+
+        // Find payment record
+        $payment = Payment::where('order_tracking_id', $orderTrackingId)->first();
+
+        if (!$payment) {
+            return redirect()->route('payment.failed')->with('error', 'Payment record not found');
         }
 
-        try {
-            // Get transaction status from Pesapal
-            $status = $this->pesapalService->getTransactionStatus($orderTrackingId);
+        // Update payment status
+        $payment->update([
+            'status' => strtolower($status['status_code'] ?? 'failed'),
+            'pesapal_tracking_id' => $status['payment_method'] ?? null,
+            'payment_method' => $status['payment_method'] ?? null,
+            'confirmation_code' => $status['confirmation_code'] ?? null,
+            'payment_status_description' => $status['payment_status_description'] ?? null
+        ]);
 
-            // Find payment record
-            $payment = Payment::where('order_tracking_id', $orderTrackingId)->first();
+        // ✅ Redirect based on actual payment status
+        $paymentStatus = strtolower($status['payment_status_description'] ?? '');
 
-            if (!$payment) {
-                return redirect()->route('payment.failed')
-                    ->with('error', 'Payment record not found');
-            }
-
-            // Update payment status
-            $payment->update([
-                'status' => strtolower($status['status_code'] ?? 'failed'),
-                'pesapal_tracking_id' => $status['payment_method'] ?? null,
-                'payment_method' => $status['payment_method'] ?? null,
-                'confirmation_code' => $status['confirmation_code'] ?? null,
-                'payment_status_description' => $status['payment_status_description'] ?? null
-            ]);
-
-            // Redirect based on status
-            if (isset($status['status_code']) && $status['status_code'] == '1') {
-                return redirect()->route('payment.success')
+        if ($paymentStatus === 'completed') {
+           return redirect()->route('payment.success')
                     ->with('success', 'Payment completed successfully');
             } else {
                 return redirect()->route('payment.failed')
                     ->with('error', 'Payment failed or was cancelled');
             }
 
-        } catch (\Exception $e) {
-            Log::error('Payment callback error: ' . $e->getMessage());
-            return redirect()->route('payment.failed')
-                ->with('error', 'An error occurred while processing payment');
-        }
+    } catch (\Exception $e) {
+        \Log::error('Payment callback error: ' . $e->getMessage());
+        return redirect()->route('payment.failed')->with('error', 'An error occurred while processing payment');
     }
+}
 
     /**
      * Handle IPN (Instant Payment Notification)

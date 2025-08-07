@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,7 +8,6 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
   <style>
-    /* KEEPING ALL YOUR ORIGINAL STYLES EXACTLY AS IS */
     :root {
       --primary-color: #d4342c;
       --secondary-color: #8b1a1a;
@@ -187,7 +187,7 @@
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script>
-    const API_URL = 'https://chickens-farms-production-6aa9.up.railway.app/api';
+    const API_URL = '/api';
 
     $('#loginForm').on('submit', function (e) {
       e.preventDefault();
@@ -202,21 +202,28 @@
         dataType: 'json',
         data: JSON.stringify({ email, password }),
         success: function (res) {
-          $('#success-message').text("Login successful!");
+          $('#success-message').text(res.message || "Login successful!");
           $('#success-alert').removeClass('d-none').delay(5000).fadeOut();
           if (res.api_token) {
             localStorage.setItem('api_token', res.api_token);
             localStorage.setItem('user_id', res.user.id);
             localStorage.setItem('user_name', res.user.name);
-//console.log('Saved token:', localStorage.getItem('api_token'));
+            // Redirect based on redirect_url from response
+             // Check for redirect URL in query params
+const urlParams = new URLSearchParams(window.location.search);
+const redirectUrl = urlParams.get('redirect');
 
-            // Optionally redirect:
-          window.location.href = 'dashboard.php';
+const role = res.user.Role;
+const defaultUrl = role === 2 ? '/Admin/index.php' : '/Users/dashboard.php';
+
+// Redirect to specified redirect URL if present, else fallback
+window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : defaultUrl;
+
           }
         },
         error: function (xhr) {
           let msg = 'Login failed!';
-          if (xhr.status === 401) msg = "Invalid credentials";
+          if (xhr.status === 401) msg = xhr.responseJSON?.message || "Invalid credentials";
           if (xhr.status === 422) {
             const errors = xhr.responseJSON.errors;
             msg = Object.values(errors).map(e => e.join(', ')).join(' ');

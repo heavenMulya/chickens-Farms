@@ -1,31 +1,30 @@
-
 <?php include 'navigation_bar.php' ?>
 <?php include 'sidebar.php' ?>
 <div class="page-wrapper">
-   <!-- Success Alert -->
-     <div class="row">
+    <!-- Success Alert -->
+    <div class="row">
         <div class="col-6">
 
         </div>
-          <div class="col-5">
-             <div class="alert alert-success alert-dismissible fade show pulse" role="alert" style="display: none;" id="success-alert">
-        <i class="fas fa-check-circle me-2"></i>
-        <strong>Success!</strong> <span id="success-message">Operation completed successfully.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+        <div class="col-5">
+            <div class="alert alert-success alert-dismissible fade show pulse" role="alert" style="display: none;" id="success-alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> <span id="success-message">Operation completed successfully.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
 
-    <!-- Error Alert -->
-    <div class="alert alert-danger alert-dismissible fade show pulse" role="alert" style="display: none;" id="error-alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        <strong>Error!</strong> <span id="error-message">Something went wrong.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+            <!-- Error Alert -->
+            <div class="alert alert-danger alert-dismissible fade show pulse" role="alert" style="display: none;" id="error-alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error!</strong> <span id="error-message">Something went wrong.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
 
         <div class="col-1">
 
         </div>
-     </div>
+    </div>
 
     <div class="content">
         <!-- Page Header -->
@@ -90,7 +89,7 @@
                 <div class="pagination-info">
                     Showing <span id="showing-start">0</span> to <span id="showing-end">0</span> of <span id="total-records">0</span> entries
                 </div>
-                
+
                 <div class="d-flex align-items-center gap-3">
                     <div class="entries-per-page d-none d-md-block">
                         <label for="entriesPerPage" class="form-label mb-0">Show:</label>
@@ -212,7 +211,7 @@
 
             <div class="modal-body">
                 <input type="hidden" id="edit_id" name="id">
-                
+
                 <div class="row">
                     <div class="col-12">
                         <div class="form-group">
@@ -291,81 +290,87 @@
 
 
 <script>
+    $(document).ready(function() {
+        let currentSearch = '';
+        let currentPage = 1;
+        let perPage = $('#entriesPerPage').val();
 
-  
-$(document).ready(function () {
-  let currentSearch = '';
-  let currentPage = 1;
-  let perPage = $('#entriesPerPage').val();
+        function fetchProducts(search = '', page = 1, perPage = 10) {
+            $('#loader').show();
+            $('#table-container').hide();
+            $('#pagination-container').hide();
+            $('#no-data').hide();
 
- function fetchProducts(search = '', page = 1, perPage = 10) {
-  $('#loader').show();
-  $('#table-container').hide();
-  $('#pagination-container').hide();
-  $('#no-data').hide();
+            $.ajax({
+                url: `/api/products/search`,
+                method: 'GET',
+                data: {
+                    search,
+                    page,
+                    per_page: perPage
+                },
+                success: function(response) {
+                    const data = response.data.data;
 
-  $.ajax({
-    url: `https://chickens-farms-production-6aa9.up.railway.app/api/products/search`,
-    method: 'GET',
-    data: { search, page, per_page: perPage },
-    success: function (response) {
-      const data = response.data.data;
+                    const tbody = $('#table_body').empty();
+                    if (data.length === 0) {
+                        $('#no-data').show();
+                    } else {
+                        data.forEach(details => {
+                            tbody.append(renderRowTemplate(details)); // ✅ render each row
+                        });
 
-      const tbody = $('#table_body').empty();
-      if (data.length === 0) {
-        $('#no-data').show();
-      } else {
-        data.forEach(details => {
-          tbody.append(renderRowTemplate(details)); // ✅ render each row
+                        $('#table-container').show();
+                        $('#pagination-container').show();
+
+                        // ✅ Show pagination
+                        renderPagination(response.data);
+
+                        // ✅ Update entry info
+                        const {
+                            current_page,
+                            per_page,
+                            total
+                        } = response.data;
+                        const start = (current_page - 1) * per_page + 1;
+                        const end = Math.min(total, current_page * per_page);
+                        $('#total_list').text(`( ${total} ) Records`);
+                        $('#entry-info').text(`Showing ${start} to ${end} of ${total} entries`);
+                    }
+
+                    $('#loader').hide();
+                },
+                error: function(err) {
+                    console.error(err);
+                    $('#loader').hide();
+                    $('#no-data').show();
+                }
+            });
+        }
+
+
+        $('#searchInput').on('keyup', function() {
+            currentSearch = $(this).val().trim();
+            currentPage = 1;
+            fetchProducts(currentSearch, currentPage, perPage);
         });
 
-        $('#table-container').show();
-        $('#pagination-container').show();
-
-        // ✅ Show pagination
-        renderPagination(response.data);
-
-        // ✅ Update entry info
-        const { current_page, per_page, total } = response.data;
-        const start = (current_page - 1) * per_page + 1;
-        const end = Math.min(total, current_page * per_page);
-        $('#total_list').text(`( ${total} ) Records`);
-        $('#entry-info').text(`Showing ${start} to ${end} of ${total} entries`);
-      }
-
-      $('#loader').hide();
-    },
-    error: function (err) {
-      console.error(err);
-      $('#loader').hide();
-      $('#no-data').show();
-    }
-  });
-}
+        $(document).on('click', '#pagination .page-link', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (!page) return;
+            currentPage = page;
+            fetchProducts(currentSearch, currentPage, perPage);
+        });
 
 
-  $('#searchInput').on('keyup', function () {
-    currentSearch = $(this).val().trim();
-    currentPage = 1;
-    fetchProducts(currentSearch, currentPage, perPage);
-  });
+        dynamicGet({
+            url: `/api/products`,
+            renderRow: renderRowTemplate
+        });
 
-  $(document).on('click', '#pagination .page-link', function (e) {
-    e.preventDefault();
-    const page = $(this).data('page');
-    if (!page) return;
-    currentPage = page;
-    fetchProducts(currentSearch, currentPage, perPage);
-  });
-
-
-  dynamicGet({
-    url: `https://chickens-farms-production-6aa9.up.railway.app/api/products`,
-    renderRow: renderRowTemplate
-  });
-
-    function renderRowTemplate(details) {
-    return `
+        function renderRowTemplate(details) {
+            return `
       <tr id="row-${details.id}">
         <td class="productimgname">
           <a href="javascript:void(0);" class="product-img">
@@ -390,53 +395,54 @@ $(document).ready(function () {
           </ul>
         </td>
       </tr>`;
-  }
+        }
 
 
-  $(document).on('click', '#pagination .page-link', function (e) {
-    e.preventDefault();
-    const page = $(this).data('page');
-    if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) return;
-    const perPage = $('#entriesPerPage').val() || 10;
-    dynamicGet({
-      url: `https://chickens-farms-production-6aa9.up.railway.app/api/products?page=${page}&per_page=${perPage}`,
-      renderRow: renderRowTemplate
-    });
-  });
+        $(document).on('click', '#pagination .page-link', function(e) {
+            e.preventDefault();
+            const page = $(this).data('page');
+            if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) return;
+            const perPage = $('#entriesPerPage').val() || 10;
+            dynamicGet({
+                url: `/api/products?page=${page}&per_page=${perPage}`,
+                renderRow: renderRowTemplate
+            });
+        });
 
-  $(document).on('change', '#entriesPerPage', function () {
-    const perPage = $(this).val();
-    dynamicGet({
-      url: `https://chickens-farms-production-6aa9.up.railway.app/api/products?page=1&per_page=${perPage}`,
-      renderRow: renderRowTemplate
-    });
-  });
+        $(document).on('change', '#entriesPerPage', function() {
+            const perPage = $(this).val();
+            dynamicGet({
+                url: `/api/products?page=1&per_page=${perPage}`,
+                renderRow: renderRowTemplate
+            });
+        });
 
-  handleCreate({
-    buttonSelector: '#save',
-    containerSelector: '#add',
-    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/products'
-  });
+        handleCreate({
+            buttonSelector: '#save',
+            containerSelector: '#add',
+            url: '/api/products'
+        });
 
-  handleEditModalOpen({
-    triggerSelector: '.openEditModal',
-    containerSelector: '#edit',
-    modalId: 'edit'
-  });
+        handleEditModalOpen({
+            triggerSelector: '.openEditModal',
+            containerSelector: '#edit',
+            modalId: 'edit'
+        });
 
-  handleEditSubmit({
-    buttonSelector: '#edit_btn',
-    containerSelector: '#edit',
-    idFieldName: 'id',
-    urlPrefix: 'https://chickens-farms-production-6aa9.up.railway.app/api/products'
-  });
+        handleEditSubmit({
+            buttonSelector: '#edit_btn',
+            containerSelector: '#edit',
+            idFieldName: 'id',
+            urlPrefix: '/api/products'
+        });
 
-  handleDelete({
-    triggerSelector: '.openDeleteModal',
-    urlPrefix: 'https://chickens-farms-production-6aa9.up.railway.app/api/products'
-  });
-})
+        handleDelete({
+            triggerSelector: '.openDeleteModal',
+            urlPrefix: '/api/products'
+        });
+    })
 </script>
 
 </body>
+
 </html>

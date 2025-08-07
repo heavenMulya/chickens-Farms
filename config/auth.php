@@ -40,11 +40,9 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
-        
-        'api' => [
-        'driver' => 'token',
+    'api' => [
+        'driver' => 'sanctum',
         'provider' => 'users',
-        'hash' => false,  // set true if your tokens are hashed
     ],
     ],
 

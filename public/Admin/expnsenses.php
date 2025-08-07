@@ -301,7 +301,7 @@ $(document).ready(function () {
   $('#no-data').hide();
 
   $.ajax({
-    url: `https://chickens-farms-production-6aa9.up.railway.app/api/expenses/search`,
+    url: `/api/expenses/search`,
     method: 'GET',
     data: { search, page, per_page: perPage },
     success: function (response) {
@@ -356,7 +356,7 @@ $(document).ready(function () {
 
 
   dynamicGet({
-    url: `https://chickens-farms-production-6aa9.up.railway.app/api/expenses`,
+    url: `/api/expenses`,
     renderRow: renderRowTemplate
   });
 
@@ -399,7 +399,7 @@ $(document).ready(function () {
     if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) return;
     const perPage = $('#entriesPerPage').val() || 10;
     dynamicGet({
-      url: `https://chickens-farms-production-6aa9.up.railway.app/api/expenses?page=${page}&per_page=${perPage}`,
+      url: `/api/expenses?page=${page}&per_page=${perPage}`,
       renderRow: renderRowTemplate
     });
   });
@@ -407,7 +407,7 @@ $(document).ready(function () {
   $(document).on('change', '#entriesPerPage', function () {
     const perPage = $(this).val();
     dynamicGet({
-      url: `https://chickens-farms-production-6aa9.up.railway.app/api/expenses?page=1&per_page=${perPage}`,
+      url: `/api/expenses?page=1&per_page=${perPage}`,
       renderRow: renderRowTemplate
     });
   });
@@ -415,7 +415,7 @@ $(document).ready(function () {
   handleCreatewithnoimage({
     buttonSelector: '#save',
     containerSelector: '#add',
-    url: 'https://chickens-farms-production-6aa9.up.railway.app/api/expenses'
+    url: '/api/expenses'
   });
 
   handleEditModalOpen({
@@ -428,12 +428,12 @@ $(document).ready(function () {
     buttonSelector: '#edit_btn',
     containerSelector: '#edit',
     idFieldName: 'id',
-    urlPrefix: 'https://chickens-farms-production-6aa9.up.railway.app/api/expenses'
+    urlPrefix: '/api/expenses'
   });
 
   handleDelete({
     triggerSelector: '.openDeleteModal',
-    urlPrefix: 'https://chickens-farms-production-6aa9.up.railway.app/api/expenses'
+    urlPrefix: '/api/expenses'
   });
   
 })

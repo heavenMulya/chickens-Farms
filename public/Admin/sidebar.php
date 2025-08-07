@@ -36,9 +36,7 @@
 <li class="">
 <a href="report.php"><img src="assets/img/icons/return1.svg" alt="img"><span> Reports</span></a>
 </li>
-<li class="submenu">
-<a href="javascript:void(0);"><img src="assets/img/icons/users1.svg" alt="img"><span> Settings</span> <span class="menu-arrow"></span></a>
-</li>
+
 
 </ul>
 </div>

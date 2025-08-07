@@ -23,9 +23,9 @@ class ChickenEntriesController extends Controller
         if ($entry->sold != 0) {
             $entry->entry_type = 'sold';
             $entry->quantity = $entry->sold;
-        } elseif ($entry->death != 0) {
+        } elseif ($entry->dead != 0) {
             $entry->entry_type = 'death';
-            $entry->quantity = $entry->death;
+            $entry->quantity = $entry->dead;
         } elseif ($entry->slaughtered != 0) {
             $entry->entry_type = 'slaughtered';
             $entry->quantity = $entry->slaughtered;
@@ -74,7 +74,6 @@ public function store(Request $request)
 {
     $request->validate([
         'batch_code'   => 'required|exists:chicken_stocks,batch_code',
-        'entry_date'   => 'required|date',
         'entry_type'   => 'required|in:death,slaughter,sold',
         'quantity'     => 'required|integer|min:1',
         'remarks'      => 'nullable|string|max:255',
@@ -115,7 +114,7 @@ public function store(Request $request)
 
         $entry = ChickenEntry::create([
             'batch_code'   => $request->batch_code,
-            'entry_date'   => $request->entry_date,
+            'entry_date'   => now(), // Automatically use current timestamp
             'slaughtered'  => $slaughtered,
             'dead'         => $dead,
             'sold'         => $sold,
@@ -127,7 +126,6 @@ public function store(Request $request)
         $stock->slaughtered += $slaughtered;
         $stock->sold += $sold;
 
-        // Optional: Recalculate remaining fields
         $stock->total_remaining = $stock->unslaughtered_remaining + $stock->slaughtered_unsold;
         $stock->save();
 
@@ -149,6 +147,7 @@ public function store(Request $request)
         ], 500);
     }
 }
+
 
 
 
@@ -200,11 +199,10 @@ public function update(Request $request, $id)
                 $oldQty = $entry->dead;
                 $column = 'dead';
 
-                // Check against remaining
                 $used = $stock->dead + $stock->slaughtered - $oldQty;
                 $remaining = $stock->starting_total - $used;
                 if ($newQty > $remaining) {
-                    return response()->json(['error' => 'Death quantity exceeds remaining chickens.'], 422);
+                    return response()->json(['error' => 'Death quantity exceeds remaining chickens which is.'.$remaining], 422);
                 }
                 break;
 
@@ -212,11 +210,10 @@ public function update(Request $request, $id)
                 $oldQty = $entry->slaughtered;
                 $column = 'slaughtered';
 
-                // Check against remaining
                 $used = $stock->dead + $stock->slaughtered - $oldQty;
                 $remaining = $stock->starting_total - $used;
                 if ($newQty > $remaining) {
-                    return response()->json(['error' => 'Slaughter quantity exceeds remaining chickens.'], 422);
+                    return response()->json(['error' => 'Slaughter quantity exceeds remaining chickens which is.'.$remaining], 422);
                 }
                 break;
 
@@ -224,10 +221,9 @@ public function update(Request $request, $id)
                 $oldQty = $entry->sold;
                 $column = 'sold';
 
-                // Check against slaughtered
                 $currentSold = $stock->sold - $oldQty;
                 if ($currentSold + $newQty > $stock->slaughtered) {
-                    return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity.'], 422);
+                    return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity which is.'. $stock->slaughtered], 422);
                 }
                 break;
 
@@ -235,8 +231,9 @@ public function update(Request $request, $id)
                 return response()->json(['error' => 'Invalid entry type'], 400);
         }
 
-        // Update entry
+        // Update entry with new quantity and current timestamp
         $entry->$column = $newQty;
+        $entry->entry_date = now(); // Update entry date to current time
         $entry->save();
 
         // Update stock

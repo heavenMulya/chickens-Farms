@@ -149,7 +149,7 @@ class OrderController extends Controller
 
  public function viewUserOrders(Request $request)
 {
-    $user = auth()->user();
+    $user = User::where('api_token', $request->bearerToken())->first();
 
     if (!$user) {
         return response()->json(['message' => 'Unauthorized'], 401);
@@ -219,25 +219,35 @@ public function reorder(Request $request, $id)
         return response()->json(['message' => 'Order not found'], 404);
     }
 
-    $items = OrderItem::where('order_id', $order->id)
-        ->get(['product_id', 'title', 'price', 'quantity']);
+    // Eager load product with order items
+    $items = OrderItem::with('product')
+        ->where('order_id', $order->id)
+        ->get();
 
-  
+    // Process each item image URL to ensure full path
+    foreach ($items as $item) {
+        if ($item->product && $item->product->image) {
+            if (!Str::startsWith($item->product->image, ['http://', 'https://'])) {
+                $item->product->image = asset('storage/' . $item->product->image);
+            }
+        }
+    }
 
     return response()->json([
-    'message' => 'Items added successfully',
-    'items' => $items->map(function ($item) {
-        return [
-            'id' => $item->product_id,
-            'title' => $item->title,
-            'price' => $item->price,
-            'quantity' => $item->quantity,
-            'image' => $item->image ?? 'https://via.placeholder.com/60x60?text=🍗'
-        ];
-    })
-]);
-
+        'message' => 'Items added successfully',
+        'items' => $items->map(function ($item) {
+            return [
+                'id' => $item->product_id,
+                'title' => $item->title,
+                'price' => $item->price,
+                'quantity' => $item->quantity,
+                'image' => $item->product ? $item->product->image : ''
+            ];
+        })
+    ]);
 }
+
+
 
 
   public function destroy($id)

@@ -1,6 +1,5 @@
 <?php include 'navbar.php' ?>
-  
-
+<?php include 'alert.php' ?>
     <!-- Hero Section -->
     <section id="home" class="hero-section">
         <div class="container">
@@ -80,7 +79,7 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 mb-4">
                     <h4 class="footer-title"><i class="fas fa-drumstick-bite"></i> MeatFresh</h4>
-                    <p>Your trusted source for premium quality chicken, meat, and fresh eggs. We deliver farm-fresh products with guaranteed quality and halal certification.</p>
+                    <p>Your trusted source for premium quality chicken, meat, and fresh eggs. We deliver farm-fresh products with guaranteed quality</p>
                     <div class="social-icons">
                         <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
                         <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
@@ -96,7 +95,6 @@
                         <li><a href="#products">Products</a></li>
                         <li><a href="#about">About Us</a></li>
                         <li><a href="#contact">Contact</a></li>
-                        <li><a href="#">Halal Certification</a></li>
                     </ul>
                 </div>
                 
@@ -104,36 +102,30 @@
                     <h4 class="footer-title">Categories</h4>
                     <ul class="footer-links">
                         <li><a href="#">Fresh Chicken</a></li>
-                        <li><a href="#">Premium Beef</a></li>
-                        <li><a href="#">Lamb & Mutton</a></li>
                         <li><a href="#">Fresh Eggs</a></li>
-                        <li><a href="#">Processed Meats</a></li>
                     </ul>
                 </div>
                 
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <h4 class="footer-title">Contact Info</h4>
+                    <h4 class="footer-title">Contact Info for Supports</h4>
                     <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt"></i> 456 Butcher Street, Meat District</li>
-                        <li><i class="fas fa-phone"></i> +1 (555) 987-6543</li>
-                        <li><i class="fas fa-envelope"></i> info@meatfresh.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i>Arusha,Tanazania</li>
+                        <li><i class="fas fa-phone"></i>+255676887277</li>
+                        <li><i class="fas fa-envelope"></i>heavenlyamuya45@gmail.com</li>
                         <li><i class="fas fa-clock"></i> Mon-Sat: 7AM-8PM</li>
                     </ul>
                 </div>
             </div>
             
             <div class="copyright">
-                <p>© 2025 MeatFresh. All rights reserved. | Quality you can trust <i class="fas fa-heart" style="color: var(--secondary-color);"></i> | Halal Certified</p>
+                <p>© 2025 MeatFresh. All rights reserved. | Quality you can trust <i class="fas fa-heart" style="color: var(--secondary-color);"></i> | Certified</p>
             </div>
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-   <script src="assets/js/jquery-3.6.0.min.js"></script>
-    <!-- Custom JavaScript -->
-    <script>
 
+    <script>
+//console.log()
         // Initialize cart from localStorage
         //let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let cart;
@@ -158,18 +150,25 @@ try {
         }
 
         // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({
-                        behavior: 'smooth',
-                        block: 'start'
-                    });
-                }
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+
+        const href = this.getAttribute('href');
+
+        // Ignore if href is just "#" or empty string
+        if (href === '#' || href === '') return;
+
+        const target = document.querySelector(href);
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
             });
-        });
+        }
+    });
+});
+
 
         // Add to cart functionality
       document.addEventListener('click', function(event) {
@@ -315,7 +314,7 @@ try {
 
 
           dynamicGet({
-    url: `https://chickens-farms-production-6aa9.up.railway.app/api/products`,
+    url: `/api/products`,
     renderRow: renderRowTemplate
   });
 

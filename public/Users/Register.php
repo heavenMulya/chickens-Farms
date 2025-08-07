@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -229,12 +230,19 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
                 transform: translateY(0);
             }
+
             40% {
                 transform: translateY(-10px);
             }
+
             60% {
                 transform: translateY(-5px);
             }
@@ -245,17 +253,18 @@
                 margin: 1rem;
                 border-radius: 15px;
             }
-            
+
             .form-body {
                 padding: 1.5rem;
             }
-            
+
             .form-header {
                 padding: 1.5rem;
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="registration-container">
@@ -264,70 +273,70 @@
                 <h2>Create Account</h2>
                 <p>Join our community today</p>
             </div>
-            
+
             <div class="form-body">
-                       <!-- Success Alert -->
-     <div class="row mt-5">
-        <div class="col-6">
+                <!-- Success Alert -->
+                <div class="row mt-5">
+                    <div class="col-6">
 
-        </div>
-          <div class="col-5">
-             <div class="alert alert-success alert-dismissible fade show pulse" role="alert" style="display: none;" id="success-alert">
-        <i class="fas fa-check-circle me-2"></i>
-        <strong>Success!</strong> <span id="success-message">Operation completed successfully.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="alert alert-success alert-dismissible fade show pulse" role="alert" style="display: none;" id="success-alert">
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Success!</strong> <span id="success-message">Operation completed successfully.</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
 
-    <!-- Error Alert -->
-    <div class="alert alert-danger alert-dismissible fade show pulse" role="alert" style="display: none;" id="error-alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        <strong>Error!</strong> <span id="error-message">Something went wrong.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-        </div>
+                        <!-- Error Alert -->
+                        <div class="alert alert-danger alert-dismissible fade show pulse" role="alert" style="display: none;" id="error-alert">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Error!</strong> <span id="error-message">Something went wrong.</span>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </div>
 
-        <div class="col-1">
+                    <div class="col-1">
 
-        </div>
-     </div>
-<form id="registerForm">
-    <div class="form-group">
-        <label class="form-label">Name</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-user"></i></span>
-            <input type="text" id="name" class="form-control" placeholder="Enter first name" required>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <label class="form-label">Email Address</label>
-        <div class="input-group">
-            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-            <input type="email" id="email" class="form-control" placeholder="Enter email address" required>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    <input type="password" id="password" class="form-control" placeholder="Create password" required>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="form-group">
-                <label class="form-label">Confirm Password</label>
-                <div class="input-group">
-                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                    <input type="password" id="confirm_password" class="form-control" placeholder="Confirm password" required>
-                </div>
-            </div>
-        </div>
-    </div>
-   <div class="form-group">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label class="form-label">Name</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            <input type="text" id="name" class="form-control" placeholder="Enter first name" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
+                            <input type="email" id="email" class="form-control" placeholder="Enter email address" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" id="password" class="form-control" placeholder="Create password" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label class="form-label">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" id="confirm_password" class="form-control" placeholder="Confirm password" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <div class="form-check">
                             <input class="form-check-input" type="checkbox" id="terms" required>
                             <label class="form-check-label" for="terms">
@@ -335,94 +344,94 @@
                             </label>
                         </div>
                     </div>
-    <div class="d-grid gap-2">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-user-plus me-2"></i>Create Account
-        </button>
-    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </div>
 
-     <div class="social-login">
+                    <div class="social-login">
                         <p>Already have an account?</p>
                         <a href="login.php" class="btn btn-outline-primary">
                             <i class="fas fa-sign-in-alt me-2"></i>Sign In
                         </a>
                     </div>
-</form>
+                </form>
 
             </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-  const API_URL = 'https://chickens-farms-production-6aa9.up.railway.app/api'; // Replace with your actual API URL
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const API_URL = 'https://chickens-farms-production-6aa9.up.railway.app/api';
 
-  $('#registerForm').on('submit', function(e) {
-    e.preventDefault();
+        $('#registerForm').on('submit', function(e) {
+            e.preventDefault();
 
-    const name = $('#name').val();
-    const email = $('#email').val();
-    const password = $('#password').val();
-    const confirm = $('#confirm_password').val();
+            const name = $('#name').val();
+            const email = $('#email').val();
+            const password = $('#password').val();
+            const confirm = $('#confirm_password').val();
 
-    if (password !== confirm) {
-      alert('Passwords do not match.');
-      return;
-    }
+            if (password !== confirm) {
+                const msg = 'Passwords do not match.'
+                showError(msg)
+                return;
+            }
+            $.ajax({
+                url: API_URL + '/register',
+                method: 'POST',
+                data: JSON.stringify({
+                    name: name,
+                    email: email,
+                    password: password,
+                    password_confirmation: confirm
+                }),
+                dataType: 'json',
+                contentType: 'application/json',
+                success: function(res) {
+                    const msg = 'Registration successful!';
+                    showSuccess(msg)
+                    console.log(res);
+                    if (res.api_token) {
+                        localStorage.setItem('api_token', res.api_token);
+                    }
+                window.location.href = 'login.php';
+                },
+                error: function(xhr) {
+                    if (xhr.status === 422) {
+                        let errors = xhr.responseJSON.errors;
+                        let message = '';
+                        for (let field in errors) {
+                            message += errors[field].join(', ') + '\n';
+                        }
+                        showError(message)
+                    } else {
+                        const msg = 'Registration failed!';
+                        showError(msg)
+                    }
+                    const msg = xhr.responseJSON
+                    showError(msg)
+                }
+            });
+        });
 
-    $.ajax({
-      url: API_URL + '/register',
-      method: 'POST',
-      data: JSON.stringify({
-    name: name,
-    email: email,
-    password: password,
-    password_confirmation: confirm
-  }),
-         dataType: 'json',
-        contentType: 'application/json',
-      success: function(res) {
-        const msg='Registration successful!';
-        showSuccess(msg)
-        console.log(res);
-        // Store token if returned
-        if (res.api_token) {
-          localStorage.setItem('api_token', res.api_token);
+        function showSuccess(msg) {
+
+            $('#success-message').text(msg);
+            $('#success-alert').show().delay(10000).fadeOut();
         }
-        // Optionally redirect to login/dashboard
-      },
-      error: function(xhr) {
-        if (xhr.status === 422) {
-          let errors = xhr.responseJSON.errors;
-          let message = '';
-          for (let field in errors) {
-            message += errors[field].join(', ') + '\n';
-          }
-          alert('Validation Error:\n' + message);
-          showError(message)
-        } else {
-          const msg='Registration failed!';
-          showError(msg)
+
+        function showError(msg) {
+
+            $('#error-message').text(msg);
+            $('#error-alert').show().delay(10000).fadeOut();
         }
-        console.error(xhr.responseJSON);
-      }
-    });
-  });
-
-  function showSuccess(msg) {
-
-  $('#success-message').text(msg);
-  $('#success-alert').show().delay(10000).fadeOut();
-}
-
-function showError(msg) {
-
-  $('#error-message').text(msg);
-  $('#error-alert').show().delay(10000).fadeOut();
-}
-</script>
+    </script>
 
 
 </body>
+
 </html>

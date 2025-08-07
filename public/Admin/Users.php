@@ -1,41 +1,34 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-   
 </head>
 <body>
 <?php include 'navigation_bar.php' ?>
 <?php include 'sidebar.php' ?>
 <div class="page-wrapper">
     <!-- Success Alert -->
-     <div class="row">
-        <div class="col-6">
-
+    <div class="row">
+        <div class="col-6"></div>
+        <div class="col-5">
+            <div class="alert alert-success alert-dismissible fade show pulse" role="alert" style="display: none;" id="success-alert">
+                <i class="fas fa-check-circle me-2"></i>
+                <strong>Success!</strong> <span id="success-message">Operation completed successfully.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <!-- Error Alert -->
+            <div class="alert alert-danger alert-dismissible fade show pulse" role="alert" style="display: none;" id="error-alert">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                <strong>Error!</strong> <span id="error-message">Something went wrong.</span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
         </div>
-          <div class="col-5">
-             <div class="alert alert-success alert-dismissible fade show pulse" role="alert" style="display: none;" id="success-alert">
-        <i class="fas fa-check-circle me-2"></i>
-        <strong>Success!</strong> <span id="success-message">Operation completed successfully.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <div class="col-1"></div>
     </div>
-
-    <!-- Error Alert -->
-    <div class="alert alert-danger alert-dismissible fade show pulse" role="alert" style="display: none;" id="error-alert">
-        <i class="fas fa-exclamation-triangle me-2"></i>
-        <strong>Error!</strong> <span id="error-message">Something went wrong.</span>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-        </div>
-
-        <div class="col-1">
-
-        </div>
-     </div>
 
     <div class="content">
         <!-- Page Header -->
@@ -80,12 +73,13 @@
                             <thead>
                                 <tr>
                                     <th>Username</th>
-                                    <th>email</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
                                     <th>Created At</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
-                            <tbody id='table_body'>
+                            <tbody id="table_body">
                                 <!-- Dynamic content will be loaded here -->
                             </tbody>
                         </table>
@@ -123,7 +117,7 @@
     </div>
 </div>
 
-<!-- Add Product Modal -->
+<!-- Add User Modal -->
 <div class="modal fade" id="add" tabindex="-1" aria-labelledby="addLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -136,33 +130,41 @@
 
             <div class="modal-body">
                 <div class="row">
-        
                     <div class="col-12">
                         <div class="form-group">
                             <label><i class="fas fa-align-left me-2"></i>Name</label>
-                            <input type="text"  id="name" name="name"  placeholder="Enter Name" />
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" required />
                         </div>
                     </div>
-                     <div class="col-12">
+                    <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i>Email</label>
-                            <input type="text"  id="email" name="email"  placeholder="Enter Email" />
+                            <label><i class="fas fa-envelope me-2"></i>Email</label>
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" required />
                         </div>
                     </div>
-                     <div class="col-12">
+                    <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i>Password</label>
-                            <input type="text"  id="password" name="password"  placeholder="Enter password" />
+                            <label><i class="fas fa-lock me-2"></i>Password</label>
+                            <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" required />
                         </div>
                     </div>
-                     <div class="col-12">
+                    <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i>Confirm Password</label>
-                            <input type="text"  id="confirm_password" name="confirm_password"  placeholder="Enter Confirm Password" />
+                            <label><i class="fas fa-lock me-2"></i>Confirm Password</label>
+                            <input type="password" id="confirm_password" name="password_confirmation" class="form-control" placeholder="Confirm Password" required />
                         </div>
                     </div>
-    </div>
-    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label><i class="fas fa-user-tag me-2"></i>Role</label>
+                            <select id="role" name="role" class="form-select" required>
+                                <option value="1">User</option>
+                                <option value="2">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -172,13 +174,11 @@
                     <i class="fas fa-save me-2"></i>Save User
                 </button>
             </div>
-
         </div>
     </div>
 </div>
 
-
-<!-- Edit Product Modal -->
+<!-- Edit User Modal -->
 <div class="modal fade" id="edit" tabindex="-1" aria-labelledby="editLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -190,197 +190,183 @@
             </div>
 
             <div class="modal-body">
-                    <div class="row">
+                <div class="row">
                     <input type="hidden" id="edit_id" name="id">
-
                     <div class="col-12">
                         <div class="form-group">
                             <label><i class="fas fa-align-left me-2"></i>Name</label>
-                            <input type="text"  id="edit_name" name="name"  placeholder="Enter Name" />
+                            <input type="text" id="edit_name" name="name" class="form-control" placeholder="Enter Name" required />
                         </div>
                     </div>
-                     <div class="col-12">
+                    <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i>Email</label>
-                            <input type="text"  id="email" name="email"  placeholder="Enter Email" />
+                            <label><i class="fas fa-envelope me-2"></i>Email</label>
+                            <input type="email" id="edit_email" name="email" class="form-control" placeholder="Enter Email" required />
                         </div>
                     </div>
-                     <div class="col-12">
+                    <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i>Password</label>
-                            <input type="text"  id="edit_password" name="password"  placeholder="Enter password" />
+                            <label><i class="fas fa-lock me-2"></i>Password</label>
+                            <input type="password" id="edit_password" name="password" class="form-control" placeholder="Enter New Password (optional)" />
                         </div>
                     </div>
-                     <div class="col-12">
+                    <div class="col-12">
                         <div class="form-group">
-                            <label><i class="fas fa-align-left me-2"></i>Confirm Password</label>
-                            <input type="text"  id="edit_confirm_password" name="confirm_password"  placeholder="Enter Confirm Password" />
+                            <label><i class="fas fa-lock me-2"></i>Confirm Password</label>
+                            <input type="password" id="edit_confirm_password" name="password_confirmation" class="form-control" placeholder="Confirm New Password (optional)" />
                         </div>
                     </div>
-    </div>
-    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label><i class="fas fa-user-tag me-2"></i>Role</label>
+                            <select id="edit_role" name="role" class="form-select" required>
+                                <option value="1">User</option>
+                                <option value="2">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times me-2"></i>Cancel
                 </button>
                 <button type="button" class="btn" style="background-color: #ff9f43; color: white;" id="edit_btn">
-                    <i class="fas fa-save me-2"></i>Update Users
+                    <i class="fas fa-save me-2"></i>Update User
                 </button>
             </div>
-
         </div>
     </div>
-    
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-
-  
 $(document).ready(function () {
-    
-  let currentSearch = '';
-  let currentPage = 1;
-  let perPage = $('#entriesPerPage').val();
+    let currentSearch = '';
+    let currentPage = 1;
+    let perPage = $('#entriesPerPage').val();
 
- function fetchProducts(search = '', page = 1, perPage = 10) {
-  $('#loader').show();
-  $('#table-container').hide();
-  $('#pagination-container').hide();
-  $('#no-data').hide();
+    function fetchProducts(search = '', page = 1, perPage = 10) {
+        $('#loader').show();
+        $('#table-container').hide();
+        $('#pagination-container').hide();
+        $('#no-data').hide();
 
-  $.ajax({
-    url: `http://localhost:8000/api/users/search`,
-    method: 'GET',
-    data: { search, page, per_page: perPage },
-    success: function (response) {
-      const data = response.data.data;
-
-      const tbody = $('#table_body').empty();
-      if (data.length === 0) {
-        $('#no-data').show();
-      } else {
-        data.forEach(details => {
-          tbody.append(renderRowTemplate(details)); // ✅ render each row
+        $.ajax({
+            url: `/api/users/search`,
+            method: 'GET',
+            data: { search, page, per_page: perPage },
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('api_token')
+            },
+            success: function (response) {
+                const data = response.data.data;
+                const tbody = $('#table_body').empty();
+                if (data.length === 0) {
+                    $('#no-data').show();
+                } else {
+                    data.forEach(details => {
+                        tbody.append(renderRowTemplate(details));
+                    });
+                    $('#table-container').show();
+                    $('#pagination-container').show();
+                    renderPagination(response.data);
+                    const { current_page, per_page, total } = response.data;
+                    const start = (current_page - 1) * per_page + 1;
+                    const end = Math.min(total, current_page * per_page);
+                    $('#showing-start').text(start);
+                    $('#showing-end').text(end);
+                    $('#total-records').text(total);
+                }
+                $('#loader').hide();
+            },
+            error: function (err) {
+                console.error(err);
+                $('#loader').hide();
+                $('#no-data').show();
+            }
         });
-
-        $('#table-container').show();
-        $('#pagination-container').show();
-
-        // ✅ Show pagination
-        renderPagination(response.data);
-
-        // ✅ Update entry info
-        const { current_page, per_page, total } = response.data;
-        const start = (current_page - 1) * per_page + 1;
-        const end = Math.min(total, current_page * per_page);
-        $('#total_list').text(`( ${total} ) Records`);
-        $('#entry-info').text(`Showing ${start} to ${end} of ${total} entries`);
-      }
-
-      $('#loader').hide();
-    },
-    error: function (err) {
-      console.error(err);
-      $('#loader').hide();
-      $('#no-data').show();
     }
-  });
-}
-
-
-  $('#searchInput').on('keyup', function () {
-    currentSearch = $(this).val().trim();
-    currentPage = 1;
-    fetchProducts(currentSearch, currentPage, perPage);
-  });
-
-  $(document).on('click', '#pagination .page-link', function (e) {
-    e.preventDefault();
-    const page = $(this).data('page');
-    if (!page) return;
-    currentPage = page;
-    fetchProducts(currentSearch, currentPage, perPage);
-  });
-
-
-  dynamicGet({
-    url: `http://localhost:8000/api/users`,
-    renderRow: renderRowTemplate
-  });
 
     function renderRowTemplate(details) {
-    return `
-      <tr id="row-${details.id}">
-        <td>${details.name}</td>
-        <td>${details.email}</td>
-        <td>${details.created_at}</td>
-        <td>
-          <ul class="list-inline mb-0">
-            <li class="list-inline-item">
-              <a href="javascript:void(0);" class="px-2 openEditModal" data-id="${details.id}" data-created_at="${details.created_at}" data-name="${details.name}"  data-email="${details.email}">
-                <img src="assets/img/icons/edit.svg" alt="edit">
-              </a>
-            </li>
-            <li class="list-inline-item">
-              <a href="javascript:void(0);" class="px-2 openDeleteModal" data-id="${details.id}" id="confirm-color">
-                <img src="assets/img/icons/delete.svg" alt="delete">
-              </a>
-            </li>
-          </ul>
-        </td>
-      </tr>`;
-  }
+        return `
+            <tr id="row-${details.id}">
+                <td>${details.name}</td>
+                <td>${details.email}</td>
+                <td>${details.role === 1 ? 'User' : 'Admin'}</td>
+                <td>${details.created_at}</td>
+                <td>
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item">
+                            <a href="javascript:void(0);" class="px-2 openEditModal" 
+                               data-id="${details.id}" 
+                               data-name="${details.name}" 
+                               data-email="${details.email}" 
+                               data-role="${details.role}" 
+                               data-created_at="${details.created_at}">
+                                <img src="assets/img/icons/edit.svg" alt="edit">
+                            </a>
+                        </li>
+                        <li class="list-inline-item">
+                            <a href="javascript:void(0);" class="px-2 openDeleteModal" data-id="${details.id}" id="confirm-color">
+                                <img src="assets/img/icons/delete.svg" alt="delete">
+                            </a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>`;
+    }
 
-
-  $(document).on('click', '#pagination .page-link', function (e) {
-    e.preventDefault();
-    const page = $(this).data('page');
-    if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) return;
-    const perPage = $('#entriesPerPage').val() || 10;
-    dynamicGet({
-      url: `http://localhost:8000/api/users?page=${page}&per_page=${perPage}`,
-      renderRow: renderRowTemplate
+    $('#searchInput').on('keyup', function () {
+        currentSearch = $(this).val().trim();
+        currentPage = 1;
+        fetchProducts(currentSearch, currentPage, perPage);
     });
-  });
 
-  $(document).on('change', '#entriesPerPage', function () {
-    const perPage = $(this).val();
-    dynamicGet({
-      url: `http://localhost:8000/api/users?page=1&per_page=${perPage}`,
-      renderRow: renderRowTemplate
+    $(document).on('click', '#pagination .page-link', function (e) {
+        e.preventDefault();
+        const page = $(this).data('page');
+        if (!page || $(this).parent().hasClass('disabled') || $(this).parent().hasClass('active')) return;
+        currentPage = page;
+        fetchProducts(currentSearch, currentPage, perPage);
     });
-  });
 
-  handleCreatewithnoimage({
-    buttonSelector: '#save',
-    containerSelector: '#add',
-    url: 'http://localhost:8000/api/users'
-  });
+    $(document).on('change', '#entriesPerPage', function () {
+        perPage = $(this).val();
+        currentPage = 1;
+        fetchProducts(currentSearch, currentPage, perPage);
+    });
 
-  handleEditModalOpen({
-    triggerSelector: '.openEditModal',
-    containerSelector: '#edit',
-    modalId: 'edit'
-  });
+    handleCreatewithnoimage({
+        buttonSelector: '#save',
+        containerSelector: '#add',
+        url: '/api/users'
+    });
 
-  handleEditSubmit({
-    buttonSelector: '#edit_btn',
-    containerSelector: '#edit',
-    idFieldName: 'id',
-    urlPrefix: 'http://localhost:8000/api/users'
-  });
+    handleEditModalOpen({
+        triggerSelector: '.openEditModal',
+        containerSelector: '#edit',
+        modalId: 'edit'
+    });
 
-  handleDelete({
-    triggerSelector: '.openDeleteModal',
-    urlPrefix: 'http://localhost:8000/api/users'
-  });
-  
-})
+    handleEditSubmit({
+        buttonSelector: '#edit_btn',
+        containerSelector: '#edit',
+        idFieldName: 'id',
+        urlPrefix: '/api/users'
+    });
 
+    handleDelete({
+        triggerSelector: '.openDeleteModal',
+        urlPrefix: '/api/users'
+    });
+
+    fetchProducts(currentSearch, currentPage, perPage);
+});
 </script>
-
 </body>
 </html>
