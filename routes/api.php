@@ -12,14 +12,19 @@ use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Users\userManagement;
 
-Route::get('/r', function () {
+Route::get('/', function () {
    return Route('dashboard.php');
 });
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::get('products', [manageProducts::class, 'index']);
+Route::get('products/{product}', [manageProducts::class, 'show']);
 
+
+Route::middleware('token.auth')->group(function () {
+
+Route::post('/logout', [AuthController::class, 'logout']);
 Route::post('/payment/initiate', [PaymentController::class, 'initiatePayment'])->name('payment.initiate');
 Route::post('/payment', [PaymentController::class, 'setupPesapal']);
 Route::get('/payment/callback', [PaymentController::class, 'paymentCallback'])->name('payment.callback');
@@ -33,7 +38,7 @@ Route::delete('/orders/{id}', [OrderController::class, 'destroy']);
 Route::put('/orders/{order}/reorder', [OrderController::class, 'reorder']);
 
 Route::get('/products/search', [manageProducts::class, 'searching']);
-Route::apiResource('products', manageProducts::class);
+Route::apiResource('products', manageProducts::class)->except(['index','show']);
 
 Route::get('/chickens/search', [ChickenBatchController::class, 'searching']);
 Route::apiResource('chickens', ChickenBatchController::class);
@@ -62,3 +67,4 @@ Route::put('/orders/{id}/status', [OrderController::class, 'updateOrderStatus'])
 Route::put('/orders/{id}', [OrderController::class, 'updateOrderStatusAdmin']);
 Route::apiResource('users', userManagement::class);
 
+});

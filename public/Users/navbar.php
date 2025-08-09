@@ -104,7 +104,7 @@
     $('#logout-btn').on('click', function (e) {
         e.preventDefault();
 
-        const token = localStorage.getItem('api_token');
+        const token = localStorage.getItem('user_api_token');
 
         if (!token) {
             localStorage.clear();

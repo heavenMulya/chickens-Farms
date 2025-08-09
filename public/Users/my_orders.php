@@ -145,7 +145,7 @@
 <script src="assets/plugins/sweetalert/sweetalerts.min.js"></script>
 <script>
   $(document).ready(function() {
-    const token = localStorage.getItem('api_token');
+    const token = localStorage.getItem('user_api_token');
     console.log('token is' + token)
     if (!token) {
       $('#orders-list').html('<div class="alert alert-danger text-center">You must be logged in to view your orders. <a href="login.php?redirect=my_orders.php" class="alert-link">Login here</a>.</div>');
@@ -371,7 +371,7 @@
       e.preventDefault();
       const orderId = $('#cancelOrderId').val();
       const reason = $('#cancelReasonInput').val().trim();
-      const token = localStorage.getItem('api_token');
+      const token = localStorage.getItem('user_api_token');
 
       if (!reason) {
         $('#cancelReasonAlert').removeClass().addClass('alert alert-danger').text('Please enter a cancellation reason.').show();

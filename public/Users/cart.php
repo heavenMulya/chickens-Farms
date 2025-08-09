@@ -94,7 +94,7 @@
 </section>
 
 <script>
-    const token = localStorage.getItem('api_token'); // Or use sessionStorage
+    const token = localStorage.getItem('user_api_token'); // Or use sessionStorage
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     // Update cart badge

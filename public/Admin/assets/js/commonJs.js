@@ -56,7 +56,7 @@ function dynamicGet({
         url: url,
         dataType: "json",
         headers: {
-            Authorization: "Bearer " + localStorage.getItem("api_token"),
+            Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
         },
         success: function (response) {
             const data = response.data.data;
@@ -172,7 +172,7 @@ function handleCreatewithnoimage({
             dataType: "json",
             contentType: "application/json",
             headers: {
-                Authorization: "Bearer " + localStorage.getItem("api_token"),
+                Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
             },
             data: JSON.stringify(formData),
             success: function (response) {
@@ -220,7 +220,7 @@ function handleCreate({
             contentType: false,
             dataType: "json",
             headers: {
-                Authorization: "Bearer " + localStorage.getItem("api_token"),
+                Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
             },
             success: function (response) {
                 showSuccess(response.message);
@@ -290,7 +290,7 @@ function getBatch({
         url: `/api/chicken-batches?type=${type}`,
         method: "GET",
         headers: {
-            Authorization: "Bearer " + localStorage.getItem("api_token"),
+            Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
         },
         success: function (res) {
             if (res.success) {
@@ -357,9 +357,10 @@ function handleEditSubmit({
             data: JSON.stringify(formData),
             contentType: "application/json",
             headers: {
-                Authorization: "Bearer " + localStorage.getItem("api_token"),
+                Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
                 Accept: "application/json",
             },
+            
             success: function (response) {
                 showSuccess(response.message);
                 $(modalSelector).modal("hide");
@@ -425,7 +426,7 @@ function handleDelete({
                     dataType: "json",
                     headers: {
                         Authorization:
-                            "Bearer " + localStorage.getItem("api_token"),
+                            'Bearer ' + localStorage.getItem("admin_api_token"),
                     },
                     success: function (response) {
                         Swal.fire({

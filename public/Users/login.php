@@ -201,26 +201,36 @@
         contentType: 'application/json',
         dataType: 'json',
         data: JSON.stringify({ email, password }),
-        success: function (res) {
-          $('#success-message').text(res.message || "Login successful!");
-          $('#success-alert').removeClass('d-none').delay(5000).fadeOut();
-          if (res.api_token) {
-            localStorage.setItem('api_token', res.api_token);
-            localStorage.setItem('user_id', res.user.id);
-            localStorage.setItem('user_name', res.user.name);
-            // Redirect based on redirect_url from response
-             // Check for redirect URL in query params
-const urlParams = new URLSearchParams(window.location.search);
-const redirectUrl = urlParams.get('redirect');
+   success: function (res) {
+  $('#success-message').text(res.message || "Login successful!");
+  $('#success-alert').removeClass('d-none').delay(5000).fadeOut();
 
-const role = res.user.Role;
-const defaultUrl = role === 2 ? '/Admin/index.php' : '/Users/dashboard.php';
+  if (res.api_token) {
+    localStorage.removeItem('user_api_token');
+    localStorage.removeItem('admin_api_token');
 
-// Redirect to specified redirect URL if present, else fallback
-window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : defaultUrl;
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect');
 
-          }
-        },
+    // Define defaultUrl based on role:
+    const defaultUrl = res.user.Role === 2 ? '/Admin/index.php' : '/Users/dashboard.php';
+
+    if (res.user.Role === 2) {
+      localStorage.setItem('admin_api_token', res.api_token);
+      localStorage.setItem('admin_user_id', res.user.id);
+      localStorage.setItem('admin_user_name', res.user.name);
+    } else {
+      localStorage.setItem('user_api_token', res.api_token);
+      localStorage.setItem('user_id', res.user.id);
+      localStorage.setItem('user_name', res.user.name);
+    }
+
+    // Redirect either to URL in query param or default based on role
+    window.location.href = redirectUrl ? decodeURIComponent(redirectUrl) : defaultUrl;
+  }
+}
+
+,
         error: function (xhr) {
           let msg = 'Login failed!';
           if (xhr.status === 401) msg = xhr.responseJSON?.message || "Invalid credentials";

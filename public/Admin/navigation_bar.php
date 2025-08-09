@@ -185,3 +185,13 @@
 
 <script src="assets/js/script.js"></script>
 <script src="assets/js/commonJs.js"></script>
+<script>
+    $(document).ready(function() {
+    const token = localStorage.getItem('admin_api_token');
+    if (!token) {
+        // No token found, redirect to login
+        window.location.href = '/Users/login.php';
+    }
+});
+
+</script>

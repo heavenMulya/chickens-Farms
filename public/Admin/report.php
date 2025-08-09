@@ -155,6 +155,9 @@ $(document).on('click', '#viewReport', function () {
     $.ajax({
         url: url,
         method: 'GET',
+         headers: {
+            'Authorization': 'Bearer ' + localStorage.getItem('admin_api_token') // Or sessionStorage
+        },
         dataType: 'json',
         success: function (res) {
             if (!res.data && !res.batch_wise_summary || (res.batch_wise_summary && res.batch_wise_summary.length === 0)) {
