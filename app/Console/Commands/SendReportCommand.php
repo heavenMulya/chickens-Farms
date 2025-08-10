@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportMail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class SendReportCommand extends Command
 {
@@ -16,7 +17,7 @@ class SendReportCommand extends Command
 {
     $type = $this->argument('type'); // daily, weekly, monthly
     $this->info("Preparing {$type} report...");
-
+ Log::info("Report send command started for type: {$this->argument('type')}");
     // Build request for business summary
     
     $req = Request::create('/', 'GET', ['filter' => $type]);
@@ -41,6 +42,12 @@ class SendReportCommand extends Command
         Mail::to($recipient)->send(new ReportMail($batchReportData, $type, 'batch'));
         $this->info("{$type} batch-wise summary emailed to {$recipient}");
     }
+
+       Log::info("Report send command finished.");
 }
 
 }
+
+
+    // Your logic...
+ 
