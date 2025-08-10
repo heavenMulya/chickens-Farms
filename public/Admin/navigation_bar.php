@@ -11,6 +11,7 @@
 <link rel="stylesheet" href="assets/plugins/fontawesome/css/fontawesome.min.css">
 <link rel="stylesheet" href="assets/plugins/fontawesome/css/all.min.css">
 <link rel="stylesheet" href="assets/css/style.css">
+
 </head>
 <body>
 <div id="global-loader">
@@ -22,12 +23,10 @@
 
 <div class="header-left active">
 <a href="" class="logo">
+  <img src="" alt="">
+</a>
 
-</a>
-<a href="" class="logo-small">
-</a>
-<a id="toggle_btn" href="javascript:void(0);">
-</a>
+
 </div>
 
 <a id="mobile_btn" class="mobile_btn" href="#sidebar">

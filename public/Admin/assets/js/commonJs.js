@@ -265,15 +265,45 @@ function handleEditModalOpen({ triggerSelector, containerSelector, modalId }) {
         }).done(() => {
               console.log("Batch type for editing:", data.batch_type);
             // Now populate other fields
-            Object.keys(data).forEach((key) => {
-                const element = container.find(`[name="${key}"]`);
-                if (!element.length) return;
-                if (element.is("select")) {
-                    element.val(data[key]).trigger("change");
-                } else {
-                    element.val(data[key]);
-                }
-            });
+            // Object.keys(data).forEach((key) => {
+            //     const element = container.find(`[name="${key}"]`);
+            //     if (!element.length) return;
+            //     if (element.is("select")) {
+            //         element.val(data[key]).trigger("change");
+            //     } else {
+            //         element.val(data[key]);
+            //     }
+            // });
+
+            // Inside your getBatch().done() callback or wherever you populate form fields
+
+// Set other fields first
+Object.keys(data).forEach((key) => {
+    const element = container.find(`[name="${key}"]`);
+    if (!element.length) return;
+
+    // Skip file input, handle separately below
+    if (element.is('input[type="file"]')) {
+        return;
+    }
+
+    if (element.is("select")) {
+        element.val(data[key]).trigger("change");
+    } else {
+        element.val(data[key]);
+    }
+});
+
+// Now handle the image preview separately:
+const imageUrl = data.image; // or data['image'] — adjust based on your data key for image
+if (imageUrl) {
+    $('#edit_image_preview').attr('src', imageUrl).show();
+    $('#edit_existing_image').val(imageUrl);
+} else {
+    $('#edit_image_preview').hide().attr('src', '');
+    $('#edit_existing_image').val('');
+}
+
 
             const modal = new bootstrap.Modal(document.getElementById(modalId));
             modal.show();

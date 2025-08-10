@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportMail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+
 
 class SendReportCommand extends Command
 {
@@ -17,8 +17,6 @@ class SendReportCommand extends Command
 {
     $type = $this->argument('type'); // daily, weekly, monthly
     $this->info("Preparing {$type} report...");
- Log::info("Report send command started for type: {$this->argument('type')}");
-    // Build request for business summary
     
     $req = Request::create('/', 'GET', ['filter' => $type]);
     $controller = app(\App\Http\Controllers\Report\ReportController::class);
@@ -27,7 +25,7 @@ class SendReportCommand extends Command
     $response = $controller->businessSummary($req);
     $businessReportData = json_decode($response->getContent(), true);
 
-    $recipient = env('REPORT_EMAIL', 'heavenlyamuya959@gmail.com');
+    $recipient = env('REPORT_EMAIL', '');
 
     // Send business summary email
     Mail::to($recipient)->send(new ReportMail($businessReportData, $type, 'business'));
@@ -35,7 +33,6 @@ class SendReportCommand extends Command
 
     // Only send batch-wise summary if daily
     if ($type === 'daily') {
-        // Call batchWiseSummary() method (returns JsonResponse)
         $batchResponse = $controller->batchWiseSummary();
         $batchReportData = json_decode($batchResponse->getContent(), true);
 
@@ -43,11 +40,8 @@ class SendReportCommand extends Command
         $this->info("{$type} batch-wise summary emailed to {$recipient}");
     }
 
-       Log::info("Report send command finished.");
 }
 
 }
 
-
-    // Your logic...
  

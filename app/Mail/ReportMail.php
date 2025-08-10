@@ -39,17 +39,18 @@ class ReportMail extends Mailable
     /**
      * Get the message content definition.
      */
-    public function content(): Content
-    {
-        return new Content(
-            view: 'emails.report',
-            with: [
-                'reportData' => $this->reportData,
-                'reportType' => $this->reportType,
-                'contentType' => $this->contentType,  // Pass to view
-            ],
-        );
-    }
+  public function content(): Content
+{
+    return new Content(
+        view: 'emails.report',
+        with: [
+            'reportData' => $this->reportData,
+            'reportType' => $this->reportType,
+            'appName' => config('app.name'), // This pulls from config/app.php
+        ],
+    );
+}
+
 
     /**
      * Get the attachments for the message.
