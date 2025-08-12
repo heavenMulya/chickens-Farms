@@ -11,6 +11,7 @@ use App\Http\Controllers\Report\ReportController;
 use App\Http\Controllers\Order\OrderController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Users\userManagement;
+use App\Http\Controllers\ContactSubmissionController;
 
 
 
@@ -19,6 +20,22 @@ Route::get('/', function () {
    return Route('dashboard.php');
 });
 
+
+
+Route::prefix('contact-submissions')->group(function () {
+    Route::get('/', [ContactSubmissionController::class, 'index']);
+    Route::get('/search', [ContactSubmissionController::class, 'search']);
+    Route::get('/statistics', [ContactSubmissionController::class, 'statistics']);
+    Route::get('/export', [ContactSubmissionController::class, 'export']);
+    Route::post('/', [ContactSubmissionController::class, 'store']);
+    Route::get('/subjects', [ContactSubmissionController::class, 'subjects']);
+    Route::get('/{contactSubmission}', [ContactSubmissionController::class, 'show']);
+    Route::put('/{contactSubmission}', [ContactSubmissionController::class, 'update']);
+    Route::patch('/{contactSubmission}', [ContactSubmissionController::class, 'update']);
+    Route::delete('/{contactSubmission}', [ContactSubmissionController::class, 'destroy']);
+    Route::delete('/', [ContactSubmissionController::class, 'bulkDestroy']);
+
+});
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::get('products', [manageProducts::class, 'index']);

@@ -1,3 +1,4 @@
+<?php include 'header.php' ?>
 <?php include 'navbar.php' ?>
 <?php include 'alert.php' ?>
 <div class="header">
@@ -103,6 +104,7 @@
   </div>
 </div>
 
+  <?php include 'footer.php' ?>
 <script>
   // Simple JavaScript for interactive features
   document.addEventListener('DOMContentLoaded', function() {

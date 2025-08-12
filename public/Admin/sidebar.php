@@ -34,6 +34,9 @@
 <a href="expnsenses.php"><img src="assets/img/icons/transfer1.svg" alt="img"><span>Expenses</span></a>
 </li>
 <li class="">
+<a href="CustomerSubmissions.php"><img src="assets/img/icons/transfer1.svg" alt="img"><span>Customer Submissions</span></a>
+</li>
+<li class="">
 <a href="report.php"><img src="assets/img/icons/return1.svg" alt="img"><span> Reports</span></a>
 </li>
 

@@ -1,3 +1,4 @@
+<?php include 'header.php' ?>
 <?php include 'navbar.php' ?>
 <?php include 'alert.php' ?>
 
@@ -93,6 +94,7 @@
 
 </section>
 
+   <?php include 'footer.php' ?>
 <script>
     const token = localStorage.getItem('user_api_token'); // Or use sessionStorage
 
@@ -259,6 +261,10 @@
             url: '/api/orders',
             method: 'POST',
             data: JSON.stringify(orderPayload),
+               headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
             contentType: 'application/json',
             success: function(orderResponse) {
 
@@ -285,6 +291,7 @@
             error: function(err) {
 
                 console.error(err);
+                console.log(err);
                 const msg = 'Could not create order.';
                 showError(msg);
             }
