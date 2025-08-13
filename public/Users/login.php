@@ -219,6 +219,7 @@
       localStorage.setItem('admin_api_token', res.api_token);
       localStorage.setItem('admin_user_id', res.user.id);
       localStorage.setItem('admin_user_name', res.user.name);
+       localStorage.setItem('admin_role', res.user.Role);
     } else {
       localStorage.setItem('user_api_token', res.api_token);
       localStorage.setItem('user_id', res.user.id);
