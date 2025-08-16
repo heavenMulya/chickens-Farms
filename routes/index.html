@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Professional Layout</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            color: #334155;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header/Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 159, 67, 0.1);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #ff9f43 0%, #ff6b35 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #64748b;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-link:hover {
+            color: #ff9f43;
+            transform: translateY(-1px);
+        }
+
+        .nav-link.active {
+            color: #ff9f43;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff9f43, #ff6b35);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after,
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            background: linear-gradient(135deg, #ff9f43 0%, #ff6b35 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 159, 67, 0.3);
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 159, 67, 0.4);
+        }
+
+        .mobile-toggle {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 4px;
+        }
+
+        .mobile-toggle span {
+            width: 25px;
+            height: 3px;
+            background: #64748b;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .mobile-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 280px;
+            height: calc(100vh - 80px);
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 159, 67, 0.1);
+            padding: 2rem 0;
+            overflow-y: auto;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-header {
+            padding: 0 2rem 2rem;
+            border-bottom: 1px solid rgba(255, 159, 67, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-subtitle {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0 1rem;
+        }
+
+        .sidebar-item {
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            color: #64748b;
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            gap: 1rem;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 159, 67, 0.1);
+            color: #ff9f43;
+            transform: translateX(5px);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, rgba(255, 159, 67, 0.15) 0%, rgba(255, 107, 53, 0.1) 100%);
+            color: #ff9f43;
+            border-left: 4px solid #ff9f43;
+        }
+
+        .sidebar-icon {
+            width: 20px;
+            height: 20px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .sidebar-link:hover .sidebar-icon,
+        .sidebar-link.active .sidebar-icon {
+            opacity: 1;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 280px;
+            margin-top: 80px;
+            padding: 3rem;
+            min-height: calc(100vh - 160px);
+            transition: all 0.3s ease;
+        }
+
+        .content-header {
+            margin-bottom: 3rem;
+        }
+
+        .content-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1e293b 0%, #ff9f43 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .content-subtitle {
+            font-size: 1.2rem;
+            color: #64748b;
+            max-width: 600px;
+        }
+
+        .feature-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 159, 67, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(255, 159, 67, 0.15);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff9f43 0%, #ff6b35 100%);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        .card-description {
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Footer */
+        .footer {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: white;
+            padding: 4rem 0 2rem;
+            margin-left: 280px;
+            margin-top: 4rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-section h4 {
+            color: #ff9f43;
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: #ff9f43;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 159, 67, 0.2);
+            margin-top: 3rem;
+            padding-top: 2rem;
+            text-align: center;
+            color: #94a3b8;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.active {
+                transform: translateX(0);
+            }
+
+            .main-content,
+            .footer {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 80px;
+                right: -100%;
+                width: 100%;
+                height: calc(100vh - 80px);
+                background: rgba(255, 255, 255, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: flex-start;
+                padding-top: 2rem;
+                transition: right 0.3s ease;
+                gap: 1rem;
+            }
+
+            .nav-menu.active {
+                right: 0;
+            }
+
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .footer-content {
+                padding: 0 1rem;
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .content-title {
+                font-size: 2rem;
+            }
+
+            .feature-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        .sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: rgba(255, 159, 67, 0.3);
+            border-radius: 2px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 159, 67, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header/Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">ModernUI</a>
+            <ul class="nav-menu" id="navMenu">
+                <li><a href="#" class="nav-link active">Home</a></li>
+                <li><a href="#" class="nav-link">About</a></li>
+                <li><a href="#" class="nav-link">Services</a></li>
+                <li><a href="#" class="nav-link">Portfolio</a></li>
+                <li><a href="#" class="nav-link">Contact</a></li>
+                <li><a href="#" class="nav-cta">Get Started</a></li>
+            </ul>
+            <div class="mobile-toggle" id="mobileToggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h3 class="sidebar-title">Navigation</h3>
+            <p class="sidebar-subtitle">Explore our features</p>
+        </div>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link active">
+                    <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"/>
+                    </svg>
+                    Dashboard
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Projects
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+                    </svg>
+                    Team
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zM3 10a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6zM14 9a1 1 0 00-1 1v6a1 1 0 001 1h2a1 1 0 001-1v-6a1 1 0 00-1-1h-2z"/>
+                    </svg>
+                    Analytics
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link">
+                    <svg class="sidebar-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+                    </svg>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-header">
+            <h1 class="content-title">Welcome to Modern Dashboard</h1>
+            <p class="content-subtitle">Experience a clean, professional, and responsive design that adapts to all devices with beautiful animations and modern aesthetics.</p>
+        </div>
+
+        <div class="feature-cards">
+            <div class="feature-card">
+                <div class="card-icon">🚀</div>
+                <h3 class="card-title">Fast Performance</h3>
+                <p class="card-description">Optimized for speed and efficiency with smooth animations and responsive interactions that delight users.</p>
+            </div>
+            <div class="feature-card">
+                <div class="card-icon">📱</div>
+                <h3 class="card-title">Mobile Responsive</h3>
+                <p class="card-description">Perfectly adapted for all screen sizes from desktop to mobile with touch-friendly interactions.</p>
+            </div>
+            <div class="feature-card">
+                <div class="card-icon">🎨</div>
+                <h3 class="card-title">Modern Design</h3>
+                <p class="card-description">Contemporary aesthetics with glassmorphism effects, smooth gradients, and professional typography.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Company</h4>
+                <ul class="footer-links">
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Our Team</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">News</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Services</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Web Design</a></li>
+                    <li><a href="#">Development</a></li>
+                    <li><a href="#">Consulting</a></li>
+                    <li><a href="#">Support</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Resources</h4>
+                <ul class="footer-links">
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <ul class="footer-links">
+                    <li><a href="#">hello@modernui.com</a></li>
+                    <li><a href="#">+1 (555) 123-4567</a></li>
+                    <li><a href="#">123 Design Street</a></li>
+                    <li><a href="#">Creative City, CC 12345</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ModernUI. All rights reserved. Built with passion and modern design principles.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navMenu = document.getElementById('navMenu');
+        const sidebar = document.getElementById('sidebar');
+
+        mobileToggle.addEventListener('click', () => {
+            mobileToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+            sidebar.classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                sidebar.classList.remove('active');
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.12)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.08)';
+            }
+        });
+
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add active state to sidebar links
+        document.querySelectorAll('.sidebar-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                e.currentTarget.classList.add('active');
+            });
+        });
+
+        // Add hover effect to feature cards
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1024) {
+                if (!sidebar.contains(e.target) && !mobileToggle.contains(e.target)) {
+                    sidebar.classList.remove('active');
+                    mobileToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

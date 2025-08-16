@@ -304,6 +304,10 @@
             url: '/api/payment/initiate',
             method: 'POST',
             data: JSON.stringify(payload),
+                headers: {
+          Authorization: 'Bearer ' + token,
+          'Content-Type': 'application/json',
+        },
             contentType: 'application/json',
             success: function(response) {
                 $('#checkout-submit-btn').attr('disabled', false);

@@ -44,7 +44,7 @@
         <!-- Search Bar -->
         <div class="search-container">
             <input type="text" class="search-box" id="searchInput" placeholder="Search Customer Orders...">
-            <i class="fas fa-search search-icon"></i>
+          
         </div>
 
         <!-- Main Card -->
@@ -167,6 +167,7 @@
     
 </div>
 
+<?php include 'footer.php';?>
 
 <script>
 

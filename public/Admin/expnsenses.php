@@ -1,7 +1,7 @@
 
 <?php include 'navigation_bar.php' ?>
 <?php include 'sidebar.php' ?>
-<div class="page-wrapper mt-5">
+<div class="page-wrapper">
    <!-- Success Alert -->
      <div class="row">
         <div class="col-6">
@@ -44,7 +44,7 @@
         <!-- Search Bar -->
         <div class="search-container">
             <input type="text" class="search-box" id="searchInput" placeholder="Search Expenses...">
-            <i class="fas fa-search search-icon"></i>
+          
         </div>
 
         <!-- Main Card -->
@@ -266,7 +266,7 @@
     </div>
   </div>
 </div>
-
+<?php include 'footer.php';?>
 <script>
 
 $(document).ready(function () {

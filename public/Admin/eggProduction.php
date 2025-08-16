@@ -44,7 +44,6 @@
         <!-- Search Bar -->
         <div class="search-container">
             <input type="text" class="search-box" id="searchInput" placeholder="Search Chickens Batchs...">
-            <i class="fas fa-search search-icon"></i>
         </div>
 
         <!-- Main Card -->
@@ -277,7 +276,7 @@
         </div>
     </div>
 </div>
-
+<?php include 'footer.php';?>
 
 <script>
     $(document).ready(function() {

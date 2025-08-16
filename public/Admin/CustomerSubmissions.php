@@ -46,7 +46,7 @@
             <div class="col-md-6">
                 <div class="search-container">
                     <input type="text" class="search-box" id="searchInput" placeholder="Search by name, email, or subject...">
-                    <i class="fas fa-search search-icon"></i>
+                   
                 </div>
             </div>
             <div class="col-md-3">
@@ -337,7 +337,7 @@
         </div>
     </div>
 </div>
-
+<?php include 'footer.php';?>
 
 <script>
 $(document).ready(function () {
