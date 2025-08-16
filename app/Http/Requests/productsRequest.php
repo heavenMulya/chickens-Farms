@@ -27,9 +27,10 @@ public function rules()
     if ($this->isMethod('PUT') || $this->isMethod('PATCH')) {
         return [
             'name' => 'required|string',
-            'discount' => 'required|numeric',
+            'discount' => 'nullable|numeric',
             'price' => 'required|numeric',
             'status' => 'required|string',
+            'batch_type' => 'nullable|string',
             'description' => 'required|string',
             'image' => 'nullable|file', // not required in update
         ];
@@ -38,9 +39,10 @@ public function rules()
     // For store
     return [
         'name' => 'required|string',
-        'discount' => 'required|numeric',
+        'discount' => 'nullable|numeric',
         'price' => 'required|numeric',
         'status' => 'required|string',
+        'batch_type' => 'required|string',
         'description' => 'required|string',
         'image' => 'required|file',
     ];

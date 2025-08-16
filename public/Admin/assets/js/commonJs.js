@@ -211,31 +211,39 @@ function handleCreate({
     $(document).on("click", buttonSelector, function (e) {
         e.preventDefault();
 
-        const formData = collectFormDataFromContainer(containerSelector);
-        $.ajax({
-            method: "POST",
-            url,
-            data: formData,
-            processData: false,
-            contentType: false,
-            dataType: "json",
-            headers: {
-                Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
-            },
-            success: function (response) {
-                showSuccess(response.message);
-                $(modalSelector).modal("hide");
-                setTimeout(() => window.location.reload(), 1000);
-            },
-            error: function (error) {
-                const msg =
-                    error.responseJSON?.message ||
-                    error.responseText ||
-                    "Something went wrong";
-                showError(msg);
-                $(modalSelector).modal("hide");
-            },
-        });
+        const rawData = collectFormDataFromContainer(containerSelector);
+const formData = new FormData();
+
+// Append all fields into FormData
+Object.keys(rawData).forEach((key) => {
+    formData.append(key, rawData[key]);
+});
+
+$.ajax({
+    method: "POST",
+    url,
+    data: formData,
+    processData: false,
+    contentType: false,
+    dataType: "json",
+    headers: {
+        Authorization: 'Bearer ' + localStorage.getItem("admin_api_token"),
+    },
+    success: function (response) {
+        showSuccess(response.message);
+        $(modalSelector).modal("hide");
+        setTimeout(() => window.location.reload(), 1000);
+    },
+    error: function (error) {
+        const msg =
+            error.responseJSON?.message ||
+            error.responseText ||
+            "Something went wrong";
+        showError(msg);
+        $(modalSelector).modal("hide");
+    },
+});
+
     });
 }
 

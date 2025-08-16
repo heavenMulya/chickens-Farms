@@ -265,4 +265,138 @@ public function reorder(Request $request, $id)
     }
     
 
+
+    public function receipt($id)
+{
+    $order = Order::with(['items.product', 'user'])->find($id);
+
+    if (!$order) {
+        return response()->json(['message' => 'Order not found'], 404);
+    }
+
+    // Calculate totals
+    $subtotal = $order->items->sum(function ($item) {
+        return floatval($item->price) * intval($item->quantity);
+    });
+
+    // Process product images to full URLs
+    foreach ($order->items as $item) {
+        if ($item->product && $item->product->image) {
+            if (!Str::startsWith($item->product->image, ['http://', 'https://'])) {
+                $item->product->image = asset('storage/' . $item->product->image);
+            }
+        }
+    }
+
+    // Format the receipt data
+    $receiptData = [
+        'id' => $order->id,
+        'status' => $order->status,
+        'amount' => floatval($order->amount),
+        'currency' => $order->currency ?? 'TZS',
+        'payment_method' => $order->payment_method ?? 'Not specified',
+        'delivery_option' => $order->delivery_option ?? 'Not specified',
+        'description' => $order->description,
+        'created_at' => $order->created_at,
+        'updated_at' => $order->updated_at,
+        'paid_at' => $order->updated_at, // Using updated_at as paid_at if not available
+        
+        // Customer information
+        'customer_name' => trim(($order->first_name ?? '') . ' ' . ($order->last_name ?? '')) ?: ($order->user->name ?? 'N/A'),
+        'customer_email' => $order->email ?? ($order->user->email ?? 'N/A'),
+        'customer_phone' => $order->phone_number ?? ($order->user->phone ?? 'N/A'),
+        
+        // User relationship data
+        'user' => $order->user ? [
+            'id' => $order->user->id,
+            'name' => $order->user->name,
+            'email' => $order->user->email,
+            'phone' => $order->user->phone ?? 'N/A',
+        ] : null,
+        
+        // Order items with product details
+        'items' => $order->items->map(function ($item) {
+            return [
+                'id' => $item->id,
+                'product_id' => $item->product_id,
+                'title' => $item->title,
+                'price' => floatval($item->price),
+                'quantity' => intval($item->quantity),
+                'total' => floatval($item->price) * intval($item->quantity),
+                'product' => $item->product ? [
+                    'id' => $item->product->id,
+                    'title' => $item->product->title,
+                    'image' => $item->product->image,
+                    'description' => $item->product->description ?? null,
+                ] : null
+            ];
+        }),
+        
+        // Calculated totals
+        'subtotal' => $subtotal,
+        'tax' => 0.00, // Add tax calculation if needed
+        'delivery_fee' => 0.00, // Add delivery fee calculation if needed
+        'total_amount' => floatval($order->amount),
+        
+        // Receipt metadata
+        'transaction_id' => 'TXN' . $order->id . substr(time(), -6),
+        'receipt_generated_at' => now(),
+    ];
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Receipt generated successfully',
+        'order' => $receiptData
+    ]);
+}
+
+public function getPendingOrders(Request $request)
+{
+    $request->validate([
+        'batch_type' => 'required|string|in:meat,eggs',
+    ]);
+
+    $batchType = strtolower($request->batch_type);
+
+    $pendingOrders = Order::with(['items.product'])
+        ->where('sales_status', 'pending') // only pending orders
+        ->where('status', 'paid') 
+        ->whereHas('items.product', function ($q) use ($batchType) {
+            $q->where('batch_type', $batchType);
+        })
+        ->orderByDesc('created_at')
+        ->get();
+
+    return response()->json([
+        'message' => "Pending {$batchType} orders fetched successfully",
+        'orders' => $pendingOrders
+    ]);
+}
+
+
+ public function searching(Request $request)
+{
+    $perPage = $request->get('per_page', 10);
+
+    $query = Order::query();
+
+    if ($request->has('search') && !empty($request->search)) {
+        $search = $request->search;
+        $query->where('sales_status', 'like', "%{$search}%");
+    }
+
+    $products = $query->paginate($perPage);
+
+    // 🔁 Transform image to full URL
+    $products->getCollection()->transform(function ($product) {
+        if ($product->image) {
+            $product->image = asset('storage/' . $product->image);
+        }
+        return $product;
+    });
+
+    return response()->json([
+        'data' => $products
+    ]);
+}
 }

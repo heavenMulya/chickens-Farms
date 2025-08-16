@@ -229,6 +229,9 @@
             page,
             per_page: perPage
           },
+            headers: {
+            Authorization: "Bearer " + localStorage.getItem("admin_api_token"),
+        },
           success: function(response) {
             const data = response.data.data;
 

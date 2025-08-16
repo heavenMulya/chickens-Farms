@@ -161,6 +161,17 @@
                             </div>
                         </div>
 
+                         <div class="col-md-6">
+            <div class="form-group">
+              <label><i class="fas fa-info-circle me-2"></i>Product Type</label>
+              <select id="batch_type" name="batch_type" class="form-select">
+                <option value="">Choose Product Type</option>
+                <option value="meat">Meet</option>
+                <option value="eggs">Eggs</option>
+              </select>
+            </div>
+          </div>
+
                         <div class="col-12">
                             <div class="form-group">
                                 <label><i class="fas fa-image me-2"></i>Product Image</label>
@@ -299,6 +310,9 @@
                     page,
                     per_page: perPage
                 },
+                  headers: {
+            Authorization: "Bearer " + localStorage.getItem("admin_api_token"),
+        },
                 success: function(response) {
                     const data = response.data.data;
 

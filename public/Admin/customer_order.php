@@ -74,6 +74,7 @@
                                       <th>Order Date</th>
                                       <th>Total Amount</th>
                                        <th>Status</th>
+                                       <th>Sales Status</th>
                                         <th>Payment Method</th>
                                        <th>Delivery Method</th>
                                     <th>Action</th>
@@ -188,9 +189,12 @@ $(document).ready(function () {
   $('#no-data').hide();
 
   $.ajax({
-    url: `/api/orders/search`,
+    url: `/api/order/search`,
     method: 'GET',
     data: { search, page, per_page: perPage },
+      headers: {
+            Authorization: "Bearer " + localStorage.getItem("admin_api_token"),
+        },
     success: function (response) {
       const data = response.data.data;
 
@@ -333,6 +337,7 @@ function renderDeliveryBadge(option) {
                   <td>${details.created_at.split('T')[0]}</td>
                    <td>${details.amount}</td>
          <td>${renderStatusBadge(details.status)}</td>
+          <td>${renderStatusBadge(details.sales_status)}</td>
 <td>${renderPaymentBadge(details.payment_method)}</td>
 <td>${renderDeliveryBadge(details.delivery_option)}</td>
         <td>

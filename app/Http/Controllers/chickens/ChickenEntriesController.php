@@ -110,6 +110,12 @@ public function store(Request $request)
                 return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity.'], 422);
             }
             $sold = $quantity;
+
+            \App\Models\Order::where('id', $request->pending_order_id)
+        ->where('sales_status', 'pending')
+        ->update([
+            'sales_status' => 'completed'
+        ]);
         }
 
         $entry = ChickenEntry::create([
@@ -225,6 +231,12 @@ public function update(Request $request, $id)
                 if ($currentSold + $newQty > $stock->slaughtered) {
                     return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity which is.'. $stock->slaughtered], 422);
                 }
+                \App\Models\Order::where('id', $request->order_id)
+        ->where('sales_status', 'pending')
+        ->update([
+            'sales_status' => 'completed',
+            'status' => 'completed'
+        ]);
                 break;
 
             default:

@@ -63,6 +63,33 @@
   </div>
 </div>
 
+<!-- Add this Receipt Modal after your existing modals -->
+<div class="modal fade" id="receiptModal" tabindex="-1" aria-labelledby="receiptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title" id="receiptModalLabel">
+          <i class="fas fa-receipt me-2"></i>Order Receipt
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body p-0">
+        <div id="receipt-content">
+          <!-- Receipt content will be loaded here -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <!-- <button type="button" class="btn btn-primary" id="printReceiptBtn">
+          <i class="fas fa-print me-2"></i>Print Receipt
+        </button>
+        <button type="button" class="btn btn-success" id="downloadReceiptBtn">
+          <i class="fas fa-download me-2"></i>Download PDF
+        </button> -->
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Cancel Reason Modal -->
 <div class="modal fade" id="cancelReasonModal" tabindex="-1" aria-labelledby="cancelReasonLabel" aria-hidden="true">
@@ -103,6 +130,187 @@
     </div>
   </div>
 </div>
+
+
+
+<!-- Add this CSS for receipt styling -->
+<style>
+.receipt-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  font-family: 'Courier New', monospace;
+}
+
+.receipt-header {
+  text-align: center;
+  border-bottom: 2px solid #333;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.receipt-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.receipt-business {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.receipt-order-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 25px;
+  font-size: 14px;
+}
+
+.receipt-info-section h6 {
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+  font-size: 14px;
+}
+
+.receipt-info-section p {
+  margin: 2px 0;
+  color: #555;
+}
+
+.receipt-items {
+  margin-bottom: 25px;
+}
+
+.receipt-items-header {
+  display: grid;
+  grid-template-columns: 1fr 80px 60px 80px;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.receipt-item {
+  display: grid;
+  grid-template-columns: 1fr 80px 60px 80px;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px dashed #ccc;
+  font-size: 12px;
+  align-items: center;
+}
+
+.receipt-item:last-child {
+  border-bottom: none;
+}
+
+.receipt-item-name {
+  font-weight: 500;
+}
+
+.receipt-item-price,
+.receipt-item-qty,
+.receipt-item-total {
+  text-align: right;
+}
+
+.receipt-summary {
+  border-top: 2px solid #333;
+  padding-top: 15px;
+  margin-top: 20px;
+}
+
+.receipt-summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 0;
+  font-size: 14px;
+}
+
+.receipt-summary-row.total {
+  font-weight: bold;
+  font-size: 16px;
+  border-top: 1px solid #333;
+  padding-top: 8px;
+  margin-top: 8px;
+}
+
+.receipt-footer {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px dashed #ccc;
+  font-size: 12px;
+  color: #666;
+}
+
+.receipt-status {
+  display: inline-block;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-top: 10px;
+}
+
+.receipt-status.paid {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.receipt-qr-code {
+  margin-top: 20px;
+  text-align: center;
+}
+
+/* Print styles */
+@media print {
+  .modal-header, .modal-footer {
+    display: none !important;
+  }
+  
+  .receipt-container {
+    box-shadow: none;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  body * {
+    visibility: hidden;
+  }
+  
+  #receipt-content, #receipt-content * {
+    visibility: visible;
+  }
+  
+  #receipt-content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
+
+.receipt-loader {
+  text-align: center;
+  padding: 40px;
+}
+
+.receipt-loader .spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+</style>
 
   <?php include 'footer.php' ?>
 <script>
@@ -236,12 +444,14 @@
             }
 
             let buttons = '';
-            if (order.status === 'paid') {
-              buttons = `
-              <button class="btn btn-outline-primary"><i class="fas fa-receipt me-2"></i>View Receipt</button>
-              <button class="btn btn-warning"><i class="fas fa-star me-2"></i>Rate Order</button>
-            `;
-            } else if (order.status === 'unpaid') {
+           if (order.status === 'paid') {
+  buttons = `
+    <button class="btn btn-outline-primary btn-view-receipt" data-order-id="${order.id}">
+      <i class="fas fa-receipt me-2"></i>View Receipt
+    </button>
+  
+  `;
+} else if (order.status === 'unpaid') {
               buttons = `
               <button  class="btn btn-primary btn-reorder" data-order-id="${order.id}">
   <i class="fas fa-redo me-2"></i>Reorder
@@ -574,6 +784,205 @@
   });
 </script>
 
+
+<script>
+$(document).ready(function() {
+  // Handle View Receipt button click
+  $(document).on('click', '.btn-view-receipt', function(e) {
+    e.preventDefault();
+    const orderId = $(this).data('order-id');
+    const token = localStorage.getItem('user_api_token');
+    
+    if (!orderId) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Order ID not found.'
+      });
+      return;
+    }
+    
+    // Show modal with loading state
+    $('#receipt-content').html(`
+      <div class="receipt-loader">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading receipt...</span>
+        </div>
+        <p class="mt-3">Generating your receipt...</p>
+      </div>
+    `);
+    
+    const receiptModal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    receiptModal.show();
+    
+    // Fetch order details for receipt
+    $.ajax({
+      url: `/api/orders/${orderId}/receipt`,
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + token
+      },
+      success: function(response) {
+        displayReceipt(response.order);
+      },
+      error: function(xhr) {
+        // If receipt endpoint doesn't exist, try getting order details
+        $.ajax({
+          url: `/api/orders/${orderId}`,
+          method: 'GET',
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          success: function(response) {
+            displayReceipt(response);
+          },
+          error: function(xhr) {
+            $('#receipt-content').html(`
+              <div class="alert alert-danger m-4">
+                <i class="fas fa-exclamation-triangle me-2"></i>
+                Failed to load receipt. Please try again later.
+              </div>
+            `);
+          }
+        });
+      }
+    });
+  });
+  
+  // Display receipt function
+  function displayReceipt(order) {
+    console.log(order)
+    const orderDate = new Date(order.created_at).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    
+    const paymentDate = order.paid_at ? 
+      new Date(order.paid_at).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }) : orderDate;
+    
+    let itemsHtml = '';
+    let subtotal = 0;
+    
+    if (order.items && order.items.length > 0) {
+      order.items.forEach(item => {
+        const itemTotal = parseFloat(item.price) * parseInt(item.quantity);
+        subtotal += itemTotal;
+        
+        itemsHtml += `
+          <div class="receipt-item">
+            <div class="receipt-item-name">${item.title || item.product?.title || 'Product'}</div>
+            <div class="receipt-item-price">${parseFloat(item.price).toFixed(2)}</div>
+            <div class="receipt-item-qty">${item.quantity}</div>
+            <div class="receipt-item-total">${itemTotal.toFixed(2)}</div>
+          </div>
+        `;
+      });
+    } else {
+      itemsHtml = '<div class="alert alert-info">No items found in this order.</div>';
+    }
+    
+    const receiptHtml = `
+      <div class="receipt-container">
+        <div class="receipt-header">
+          <div class="receipt-title">ORDER RECEIPT</div>
+          <div class="receipt-business">
+            <strong>  Rwahumbiza Chicken Farm</strong><br>
+            Arusha, Tanzania<br>
+            Phone: +255 676 887 277<br>
+            Email: heavenlyamuya45@gmail.com
+          </div>
+        </div>
+        
+        <div class="receipt-order-info">
+          <div class="receipt-info-section">
+            <h6>Order Information</h6>
+            <p><strong>Order ID:</strong> #${order.id}</p>
+            <p><strong>Order Date:</strong> ${orderDate}</p>
+            <p><strong>Payment Date:</strong> ${paymentDate}</p>
+            <p><strong>Payment Method:</strong> ${order.payment_method || 'N/A'}</p>
+          </div>
+          
+          <div class="receipt-info-section">
+            <h6>Customer Information</h6>
+            <p><strong>Name:</strong> ${order.customer_name || order.user?.name || 'N/A'}</p>
+            <p><strong>Email:</strong> ${order.customer_email || order.user?.email || 'N/A'}</p>
+            <p><strong>Phone:</strong> ${order.customer_phone || order.user?.phone || 'N/A'}</p>
+            <div class="receipt-status paid">✓ PAID</div>
+          </div>
+        </div>
+        
+        <div class="receipt-items">
+          <div class="receipt-items-header">
+            <div>Item</div>
+            <div>Price</div>
+            <div>Qty</div>
+            <div>Total</div>
+          </div>
+          ${itemsHtml}
+        </div>
+        
+        <div class="receipt-summary">
+          <div class="receipt-summary-row">
+            <span>Subtotal:</span>
+            <span>${subtotal.toFixed(2)} ${order.currency || 'TZS'}</span>
+          </div>
+          <div class="receipt-summary-row">
+            <span>Tax:</span>
+            <span>0.00 ${order.currency || 'TZS'}</span>
+          </div>
+          <div class="receipt-summary-row">
+            <span>Delivery:</span>
+            <span>0.00 ${order.currency || 'TZS'}</span>
+          </div>
+          <div class="receipt-summary-row total">
+            <span>Total Amount:</span>
+            <span>${parseFloat(order.amount).toFixed(2)} ${order.currency || 'TZS'}</span>
+          </div>
+        </div>
+        
+        <div class="receipt-footer">
+          <p><strong>Thank you for your business!</strong></p>
+          <p>For support, contact us at heavenlyamuya45@gmail.com</p>
+        </div>
+      </div>
+    `;
+    
+    $('#receipt-content').html(receiptHtml);
+  }
+  
+  // Print receipt functionality
+  $('#printReceiptBtn').on('click', function() {
+    window.print();
+  });
+  
+  // Download PDF functionality (basic implementation)
+  $('#downloadReceiptBtn').on('click', function() {
+    // For a complete PDF solution, you'd need a library like jsPDF
+    // This is a simple fallback that opens print dialog
+    Swal.fire({
+      title: 'Download Receipt',
+      text: 'Use your browser\'s print function and select "Save as PDF" as the destination.',
+      icon: 'info',
+      showCancelButton: true,
+      confirmButtonText: 'Open Print Dialog',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.print();
+      }
+    });
+  });
+});
+</script>
 </body>
 
 </html>

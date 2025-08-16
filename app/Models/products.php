@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class products extends Model
 {
     protected $table = 'products';
+    
     protected $fillable = [
     'name',
     'Discount',
@@ -14,6 +15,7 @@ class products extends Model
     'status',
     'Description',
     'image',
+   'batch_type',
 ];
 
 }

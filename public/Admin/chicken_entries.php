@@ -43,7 +43,7 @@
     <!-- Search Bar -->
     <div class="search-container">
       <input type="text" class="search-box" id="searchInput" placeholder="Search Chickens Entry...">
-   
+
     </div>
 
     <!-- Main Card -->
@@ -131,12 +131,22 @@
             <div class="form-group">
               <label><i class="fas fa-info-circle me-2"></i>Entry Type</label>
               <select id="entry_type" name="entry_type" class="form-select">
+                <option value="">Choose Entry Type</option>
                 <option value="sold">sold</option>
                 <option value="slaughter">slaughter</option>
                 <option value="death">death</option>
               </select>
             </div>
           </div>
+          <div class="col-6" id="pendingOrderContainer" style="display:none;">
+            <div class="form-group">
+              <label><i class="fas fa-list me-2"></i>Select Pending Order</label>
+              <select id="pending_order_id" name="pending_order_id" class="form-select">
+                <option value="">Choose Pending Order</option>
+              </select>
+            </div>
+          </div>
+
           <div class="col-12">
             <div class="form-group">
               <label><i class="fas fa-info-circle me-2"></i>Batch Name</label>
@@ -237,14 +247,10 @@
   </div>
 
 </div>
-<?php include 'footer.php';?>
+<?php include 'footer.php'; ?>
 
 <script>
   $(document).ready(function() {
-
-
-
-
     let currentSearch = '';
     let currentPage = 1;
     let perPage = $('#entriesPerPage').val();
@@ -262,6 +268,9 @@
           search,
           page,
           per_page: perPage
+        },
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("admin_api_token"),
         },
         success: function(response) {
           const data = response.data.data;
@@ -403,6 +412,66 @@
     });
 
   })
+
+  $('#entry_type').on('change', function() {
+    const type = $(this).val();
+
+    if (type === 'sold') {
+      $('#pendingOrderContainer').show();
+
+      // Fetch pending orders only when user selects "sold"
+      fetchPendingOrders();
+    } else {
+      $('#pendingOrderContainer').hide();
+      $('#pending_order_id').empty().append('<option value="">Choose Pending Order</option>');
+      $('#quantity').val('');
+    }
+
+    $('#pending_order_id').on('change', function() {
+      const quantity = $(this).find(':selected').data('quantity') || '';
+      $('#quantity').val(quantity);
+    });
+
+  });
+
+
+
+  function fetchPendingOrders() {
+    $.ajax({
+      url: '/api/orders/pending',
+      method: 'POST',
+      data: {
+        batch_type: 'meat'
+      },
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('admin_api_token')
+      },
+      success: function(response) {
+        console.log('Response:', response.message, response.orders);
+
+        const orders = response.orders || [];
+        const $dropdown = $('#pending_order_id');
+
+        $dropdown.empty().append('<option value="">Choose Pending Order</option>');
+
+        orders.forEach(order => {
+          // Sum quantities of all items in this order
+          const totalQuantity = order.items?.reduce((sum, item) => {
+            return sum + parseInt(item.quantity || 0);
+          }, 0) || 0;
+
+          $dropdown.append(`
+                    <option value="${order.id}" data-quantity="${totalQuantity}">
+                        Order #${order.id} - ${order.first_name} ${order.last_name} (${totalQuantity} chickens)
+                    </option>
+                `);
+        });
+      },
+      error: function(err) {
+        console.error("Error fetching pending orders", err);
+      }
+    });
+  }
 </script>
 
 </body>

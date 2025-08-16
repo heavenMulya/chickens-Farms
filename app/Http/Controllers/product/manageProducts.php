@@ -60,6 +60,7 @@ class manageProducts extends Controller
         'Discount' => $request->discount,
          'image' => $imagePath,
     'Description' => $request->description,
+    'batch_type' => $request->batch_type,
 ]);
 
         if (!$products) {
@@ -132,6 +133,7 @@ public function update(productsRequest $request, string $id)
             'status' => $request->status,
             'Description' => $request->description,
             'image' => $imagePath,
+            'batch_type' => $request->batch_type,
         ];
 
         $updated = $product->update($updateData);
@@ -148,7 +150,7 @@ public function update(productsRequest $request, string $id)
     } catch (\Illuminate\Validation\ValidationException $e) {
         return (new JSONResponseResource(false, 422, 'Validation error', $e->errors()))->response();
     } catch (\Exception $e) {
-        \Log::error('Product update error: ' . $e->getMessage());
+       
         return (new JSONResponseResource(false, 500, 'Server error', null))->response();
     }
 }
