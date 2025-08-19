@@ -2005,6 +2005,518 @@
                 transform: translateY(0);
             }
         }
+        @media (max-width: 768px) {
+    /* Additional font size adjustments for medium screens */
+    .logo {
+        font-size: 1.3rem;
+    }
+    
+    .logo i {
+        font-size: 1.1rem;
+    }
+}/* Fix for small screen layout issues */
+@media (max-width: 1024px) {
+    .navbar {
+        height: 90px; /* Ensure proper navbar height */
+    }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        top: 90px; /* Match navbar height exactly */
+        height: calc(100vh - 90px);
+        padding-top: 2rem; /* Add top padding to prevent content cutoff */
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .page-wrapper {
+        margin-left: 0;
+        margin-top: 90px; /* Match navbar height exactly */
+        padding-top: 2rem; /* Add top padding to prevent content cutoff */
+    }
+
+    .mobile-toggle {
+        display: flex;
+    }
+
+    .profile-info {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Navbar adjustments */
+    .navbar {
+        height: 90px; /* Consistent height */
+        min-height: 90px;
+    }
+    
+    .nav-container {
+        padding: 1rem;
+        height: 90px; /* Match navbar height */
+        align-items: center;
+    }
+
+    /* Sidebar adjustments */
+    .sidebar {
+        top: 90px; /* Match navbar height */
+        height: calc(100vh - 90px);
+        width: 280px;
+        padding-top: 2rem; /* Prevent content cutoff */
+    }
+
+    /* Page wrapper adjustments */
+    .page-wrapper {
+        margin-left: 0;
+        margin-top: 90px; /* Match navbar height */
+        padding: 2rem 1rem; /* More top padding */
+        min-height: calc(100vh - 90px);
+    }
+
+    /* Page header responsive */
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1.5rem;
+        margin-bottom: 2rem; /* Ensure spacing */
+    }
+
+    .page-title h4 {
+        font-size: 1.5rem;
+    }
+
+    .page-title h6 {
+        font-size: 0.9rem;
+    }
+
+    /* Responsive table improvements */
+    .table-responsive {
+        font-size: 0.875rem;
+        border-radius: 8px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    /* Stack table cells on very small screens - CENTERED CONTENT */
+    .table thead {
+        display: none;
+    }
+
+    .table tbody tr {
+        display: block;
+        background: white;
+        margin-bottom: 1rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        border: 1px solid #e2e8f0;
+        text-align: center; /* CENTER ALL CONTENT */
+        max-width: 100%;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: white;
+    }
+
+    .table tbody tr:hover {
+        background: white;
+        transform: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .table td {
+        display: block;
+        padding: 0.75rem 0;
+        border: none;
+        border-bottom: 1px solid #f1f5f9;
+        position: relative;
+        text-align: center; /* CENTER CONTENT */
+        width: 100%;
+    }
+
+    .table td:last-child {
+        border-bottom: none;
+    }
+
+    /* Add labels for table data - CENTERED */
+    .table td:before {
+        content: attr(data-label);
+        display: block;
+        font-weight: 600;
+        color: #374151;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+        text-align: center; /* CENTER LABELS */
+    }
+
+    /* Product image and name adjustments - CENTERED */
+    .productimgname {
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .product-img {
+        width: 50px;
+        height: 50px;
+        margin: 0 auto;
+    }
+
+    /* Action buttons responsive - CENTERED */
+    .list-inline {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .list-inline-item a {
+        width: 36px;
+        height: 36px;
+    }
+
+    .list-inline-item a img {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Pagination responsive */
+    .pagination-container {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .pagination-container .d-flex {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .entries-per-page {
+        display: none !important;
+    }
+
+    .pagination {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+    }
+
+    .pagination .page-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    /* Search box responsive */
+    .search-container {
+        margin-bottom: 1rem;
+    }
+
+    .search-box {
+        padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .search-icon {
+        left: 0.75rem;
+    }
+
+    /* Cards responsive */
+    .card {
+        border-radius: 12px;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Modal responsive */
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1.5rem;
+    }
+
+    .modal-title {
+        font-size: 1.25rem;
+    }
+
+    /* Form elements responsive */
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-control,
+    .form-select {
+        padding: 0.75rem;
+        font-size: 0.9rem;
+    }
+
+    /* Image upload responsive */
+    .image-uploads {
+        padding: 1.5rem;
+    }
+
+    /* Alert responsive */
+    .alert {
+        padding: 1rem;
+        font-size: 0.9rem;
+        border-radius: 8px;
+    }
+
+    /* Stats cards responsive (if you have them) */
+    .stat-card {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+
+    .stat-number {
+        font-size: 1.5rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Extra small screens */
+    .navbar {
+        height: 80px;
+        min-height: 80px;
+    }
+    
+    .nav-container {
+        height: 80px;
+        padding: 0.75rem 1rem;
+    }
+    
+    .sidebar {
+        top: 80px;
+        height: calc(100vh - 80px);
+        padding-top: 2rem;
+    }
+    
+    .page-wrapper {
+        margin-top: 80px;
+        padding: 2rem 0.75rem;
+        min-height: calc(100vh - 80px);
+    }
+
+    .page-header {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .page-title h4 {
+        font-size: 1.2rem;
+    }
+
+    .page-title h6 {
+        font-size: 0.85rem;
+    }
+
+    .logo {
+        font-size: 1rem;
+    }
+    
+    .logo i {
+        font-size: 0.9rem;
+        margin-right: 0.3rem;
+    }
+
+    /* Table content - FULLY CENTERED */
+    .table td {
+        text-align: center;
+        font-size: 0.85rem;
+        padding: 1rem 0;
+    }
+
+    .table td:before {
+        font-size: 0.7rem;
+        margin-bottom: 0.75rem;
+        text-align: center;
+        display: block;
+    }
+
+    .productimgname {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.75rem;
+        align-items: center;
+    }
+
+    .product-img {
+        width: 45px;
+        height: 45px;
+        margin: 0 auto;
+    }
+
+    .search-box {
+        padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+        font-size: 0.9rem;
+    }
+
+    .btn-added {
+        padding: 0.625rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .modal-dialog {
+        margin: 0.5rem;
+        max-width: calc(100% - 1rem);
+    }
+
+    .modal-header,
+    .modal-body,
+    .modal-footer {
+        padding: 1rem;
+    }
+
+    /* Ensure content doesn't overflow */
+    body {
+        overflow-x: hidden;
+    }
+
+    .container,
+    .container-fluid {
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+}
+
+/* Alternative table layout for very small screens */
+@media (max-width: 576px) {
+    /* Horizontal scroll table option */
+    .table-responsive-alt {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 8px;
+    }
+
+    .table-responsive-alt .table {
+        min-width: 700px;
+        margin-bottom: 0;
+    }
+
+    .table-responsive-alt .table thead th {
+        white-space: nowrap;
+        padding: 1rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .table-responsive-alt .table td {
+        white-space: nowrap;
+        padding: 1rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .table-responsive-alt .productimgname {
+        min-width: 150px;
+    }
+
+    .table-responsive-alt .list-inline {
+        min-width: 80px;
+    }
+}
+
+/* Ensure proper spacing and prevent content from going under navbar */
+.page-content {
+    padding-top: 1rem;
+}
+
+/* Fix for overlapping content - CRITICAL FIXES */
+@media (max-width: 768px) {
+    .navbar {
+        position: fixed;
+        z-index: 1030;
+        height: 90px; /* Consistent height */
+        width: 100%;
+        top: 0;
+    }
+
+    .sidebar {
+        z-index: 1020;
+        position: fixed;
+        top: 90px; /* Start below navbar */
+        left: 0;
+        transform: translateX(-100%);
+    }
+
+    .sidebar.active {
+        transform: translateX(0);
+    }
+
+    .page-wrapper {
+        z-index: 1;
+        position: relative;
+        margin-top: 90px; /* Space for fixed navbar */
+        padding-top: 2rem; /* Additional top padding */
+        margin-left: 0;
+    }
+    
+    /* Ensure sidebar content is visible from top */
+    .sidebar-nav {
+        padding-top: 0;
+        margin-top: 0;
+    }
+    
+    .sidebar-header {
+        padding-top: 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 80px;
+        z-index: 1030;
+    }
+    
+    .sidebar {
+        top: 80px;
+        z-index: 1020;
+    }
+    
+    .page-wrapper {
+        margin-top: 80px;
+        padding-top: 2rem;
+    }
+}
+
+/* Custom scrollbar for small screens */
+@media (max-width: 768px) {
+    .table-responsive::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: #f1f5f9;
+        border-radius: 3px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: rgba(255, 159, 67, 0.4);
+        border-radius: 3px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 159, 67, 0.6);
+    }
+}
     </style>  
 </head>
 
