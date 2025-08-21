@@ -30,7 +30,7 @@ public function rules()
             'discount' => 'nullable|numeric',
             'price' => 'required|numeric',
             'status' => 'required|string',
-            'batch_type' => 'nullable|string',
+            //'batch_type' => 'nullable|string',
             'description' => 'required|string',
             'image' => 'nullable|file', // not required in update
         ];

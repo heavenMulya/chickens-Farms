@@ -96,7 +96,7 @@
 
    <?php include 'footer.php' ?>
 <script>
-    const token = localStorage.getItem('user_api_token'); // Or use sessionStorage
+    const token = localStorage.getItem('user_api_token'); 
 
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     // Update cart badge
@@ -210,7 +210,7 @@
         e.preventDefault()
         const userIds = localStorage.getItem('user_id');
         console.log('user id is' + userIds)
-        if (!userIds) {
+        if (!token) {
             const currentUrl = window.location.href;
             const loginUrl = `login.php?redirect=${encodeURIComponent(currentUrl)}`;
 
@@ -265,7 +265,6 @@
           Authorization: 'Bearer ' + token,
           'Content-Type': 'application/json',
         },
-            contentType: 'application/json',
             success: function(orderResponse) {
 
                 if (!orderResponse.success) {
@@ -289,7 +288,6 @@
                 }
             },
             error: function(err) {
-
                 console.error(err);
                 console.log(err);
                 const msg = 'Could not create order.';
@@ -313,7 +311,6 @@
                 $('#checkout-submit-btn').attr('disabled', false);
                 $('#btn-loader').addClass('d-none');
                 $('.btn-text').text('Proceed with Payment');
-
                 if (response.success && response.redirect_url) {
                     // Store order ID temporarily to update later after payment success
                     localStorage.setItem('last_order_id', orderId);
