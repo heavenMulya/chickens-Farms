@@ -358,7 +358,14 @@ public function getPendingOrders(Request $request)
 
     $batchType = strtolower($request->batch_type);
 
-    $pendingOrders = Order::with(['items.product'])
+    $pendingOrders = Order::with(['items' => function ($q) use ($batchType) {
+            // Only include order items with products of the requested batch type
+            $q->whereHas('product', function ($q2) use ($batchType) {
+                $q2->where('batch_type', $batchType);
+            })->with(['product' => function ($q3) use ($batchType) {
+                $q3->where('batch_type', $batchType);
+            }]);
+        }])
         ->where('sales_status', 'pending') // only pending orders
         ->where('status', 'paid') 
         ->whereHas('items.product', function ($q) use ($batchType) {
@@ -372,6 +379,7 @@ public function getPendingOrders(Request $request)
         'orders' => $pendingOrders
     ]);
 }
+
 
 
  public function searching(Request $request)

@@ -106,9 +106,9 @@ public function store(Request $request)
             $slaughtered = $quantity;
 
         } elseif ($request->entry_type === 'sold') {
-            if ($stock->sold + $quantity > $stock->slaughtered) {
-                return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity.'], 422);
-            }
+            // if ($stock->sold + $quantity > $stock->slaughtered) {
+            //     return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity.'], 422);
+            // }
             $sold = $quantity;
 
             \App\Models\Order::where('id', $request->pending_order_id)
@@ -124,7 +124,8 @@ public function store(Request $request)
             'slaughtered'  => $slaughtered,
             'dead'         => $dead,
             'sold'         => $sold,
-            'remarks'      => $request->remarks
+            'remarks'      => $request->remarks,
+               'ORDER_ID'      => $request->pending_order_id
         ]);
 
         // Update stock values
@@ -228,9 +229,9 @@ public function update(Request $request, $id)
                 $column = 'sold';
 
                 $currentSold = $stock->sold - $oldQty;
-                if ($currentSold + $newQty > $stock->slaughtered) {
-                    return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity which is.'. $stock->slaughtered], 422);
-                }
+                // if ($currentSold + $newQty > $stock->slaughtered) {
+                //     return response()->json(['error' => 'Sold quantity exceeds slaughtered quantity which is.'. $stock->slaughtered], 422);
+                // }
                 \App\Models\Order::where('id', $request->order_id)
         ->where('sales_status', 'pending')
         ->update([

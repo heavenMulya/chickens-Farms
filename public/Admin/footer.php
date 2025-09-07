@@ -29,15 +29,8 @@
                     <li><a href="#">Training Resources</a></li>
                 </ul>
             </div>
-            <div class="footer-section">
-                <h4>Contact Info</h4>
-                <ul class="footer-links">
-                    <li><a href="#">farm@example.com</a></li>
-                    <li><a href="#">+1 (555) 123-4567</a></li>
-                    <li><a href="#">123 Farm Road</a></li>
-                    <li><a href="#">Agricultural City, AC 12345</a></li>
-                </ul>
-            </div>
+            
+              
 
             
  

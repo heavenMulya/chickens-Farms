@@ -13,7 +13,8 @@ class ChickenEntry extends Model
 'sold',
 'dead',
 'slaughtered',
-'remarks'
+'remarks',
+'ORDER_ID'
     ];
     // ChickenEntry.php
 public function batch()

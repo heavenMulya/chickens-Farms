@@ -59,7 +59,7 @@
                     <input type="email" class="form-control mb-2" name="email" placeholder="Email" required>
                 </div>
                 <div class="col-md-6">
-                    <input type="text" class="form-control mb-2" name="phone_number" placeholder="Phone Number" required>
+                    <input type="number" class="form-control mb-2" name="phone_number" placeholder="Phone Number" required>
                 </div>
                 <div class="col-md-6">
                     <input type="text" class="form-control mb-2" name="description" placeholder="Description" value="Order from MeatFresh">
@@ -289,8 +289,8 @@
             },
             error: function(err) {
                 console.error(err);
-                console.log(err);
-                const msg = 'Could not create order.';
+               const mess=err.responseJSON.message;
+                const msg = 'Could not create order.Error '+mess;
                 showError(msg);
             }
         });

@@ -365,7 +365,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const API_URL = 'https://chickens-farms-production-6aa9.up.railway.app/api';
+        const API_URL = '/api';
 
         $('#registerForm').on('submit', function(e) {
             e.preventDefault();
@@ -400,21 +400,26 @@
                     }
                 window.location.href = 'login.php';
                 },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        let errors = xhr.responseJSON.errors;
-                        let message = '';
-                        for (let field in errors) {
-                            message += errors[field].join(', ') + '\n';
-                        }
-                        showError(message)
-                    } else {
-                        const msg = 'Registration failed!';
-                        showError(msg)
-                    }
-                    const msg = xhr.responseJSON
-                    showError(msg)
-                }
+              error: function(xhr) {
+    console.log(xhr.responseJSON);
+
+    if (xhr.status === 422) {
+        let errors = xhr.responseJSON.errors;
+        let messages = [];
+
+        for (let field in errors) {
+            if (errors.hasOwnProperty(field)) {
+                messages.push(errors[field].join(', '));
+            }
+        }
+
+        showError(messages.join('\n')); // pass string, not object
+    } else {
+        let msg = xhr.responseJSON?.message || 'Registration failed!';
+        showError(msg);
+    }
+}
+
             });
         });
 

@@ -264,7 +264,7 @@
                             <i class="fas fa-envelope"></i>
                         </div>
                         <h4>Email Us</h4>
-                        <p>heavenlyamuya45@gmail.com<br>
+                        <p>rwehumbizachickenfarms@gmail.com<br>
                             We'll respond within 24 hours</p>
                     </div>
                 </div>
@@ -370,7 +370,7 @@
                             </li>
                             <li>
                                 <span class="day">Sunday</span>
-                                <span class="time" style="color: var(--primary-color);">Closed</span>
+                                <span class="time" >7:00 AM - 8:00 PM</span>
                             </li>
                         </ul>
                     </div>

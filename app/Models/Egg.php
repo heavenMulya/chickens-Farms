@@ -13,7 +13,8 @@ class Egg extends Model
 'broken_eggs',
 'good_eggs',
 'sold_eggs',
-'remarks'
+'remarks',
+'ORDER_ID'
     ];
 
 public function batch()

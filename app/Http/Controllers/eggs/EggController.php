@@ -69,6 +69,13 @@ public function store(Request $request)
         $request->validate([
             'batch_code' => 'required|string|exists:chicken_stocks,batch_code',
             'sold_eggs' => 'required|integer|min:0',
+             'pending_order_id' => 'required|string',
+        ]);
+
+         \App\Models\Order::where('id', $request->pending_order_id)
+        ->where('sales_status', 'pending')
+        ->update([
+            'sales_status' => 'completed'
         ]);
 
         $egg = Egg::where('batch_code', $request->batch_code)->first();
@@ -84,6 +91,7 @@ public function store(Request $request)
         }
 
         $egg->sold_eggs = $request->sold_eggs;
+        $egg->ORDER_ID = $request->pending_order_id;
         $egg->save();
 
         return response()->json([
